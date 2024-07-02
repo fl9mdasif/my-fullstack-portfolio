@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { myTechStacks } from "@/constants";
 import React from "react";
@@ -8,9 +9,10 @@ import { Boxes } from "./ui/Boxes";
 
 export function AnimatedTooltipPreview() {
   return (
-    <div className="h-[20rem] w-full rounded-md  relative flex flex-col items-center justify-center antialiased overflow-hidden">
-      <div className=" " />
-
+    <div
+      id="skills"
+      className="h-[20rem] w-full rounded-md  relative flex flex-col items-center justify-center antialiased overflow-hidden"
+    >
       <Boxes />
 
       <TextGenerateEffect

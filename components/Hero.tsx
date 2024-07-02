@@ -3,6 +3,7 @@ import { FaLocationArrow } from "react-icons/fa6";
 import MagicButton from "./ui/MagicButton";
 import { Spotlight } from "./ui/Spotlight";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -48,14 +49,22 @@ const Hero = () => {
             back-end systems to deliver complete web solutions. Transforming
             Concepts into Seamless User Experiences
           </p>
-
-          <a href="#about">
-            <MagicButton
-              title="Show my work"
-              icon={<FaLocationArrow />}
-              position="right"
-            />
-          </a>
+          <div className="flex justify-center items-center gap-4">
+            <a href="#recentProjects">
+              <MagicButton
+                title="Show my work"
+                icon={<FaLocationArrow />}
+                position="right"
+              />
+            </a>
+            <Link href="/cv.pdf" download>
+              <MagicButton
+                title="Download CV"
+                icon={<FaLocationArrow />}
+                position="right"
+              />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

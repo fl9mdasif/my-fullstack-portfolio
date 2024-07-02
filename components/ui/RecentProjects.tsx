@@ -2,13 +2,17 @@
 "use client";
 
 import { FaLocationArrow } from "react-icons/fa6";
+import { IoCodeSlash } from "react-icons/io5";
 
 import { projects } from "@/data";
 import { PinContainer } from "./PinCard";
+import Link from "next/link";
+import MagicButton from "./MagicButton";
+import { IconCode } from "@tabler/icons-react";
 
 const RecentProjects = () => {
   return (
-    <div className="py-20">
+    <div id="recentProjects" className="py-20">
       <h1 className="heading">
         A small selection of{" "}
         <span className="text-purple">recent projects</span>
@@ -42,7 +46,7 @@ const RecentProjects = () => {
               </h1>
 
               <p
-                className="lg:text-xl lg:font-normal font-light text-sm line-clamp-2"
+                className="lg:text-lg lg:font-normal font-light text-sm line-clamp-2"
                 style={{
                   color: "#BEC1DD",
                   margin: "1vh 0",
@@ -51,8 +55,8 @@ const RecentProjects = () => {
                 {item.des}
               </p>
 
-              <div className="flex flex-col items-center justify-start mt-7 mb-3">
-                <div className="flex items-start">
+              <div className="flex flex-col items-start justify-center mt-7 mb-3">
+                <div className="flex ">
                   {item.iconLists.map((icon: any, index: any) => (
                     <div
                       key={index}
@@ -66,22 +70,33 @@ const RecentProjects = () => {
                   ))}
                 </div>
 
-                <div className="flex gap-1 justify-center items-center">
-                  <p className="flex lg:text-lg md:text-xs text-sm text-purple">
-                    <a href={item.link}> client-code</a>
+                <div className="flex justify-between   mt-3">
+                  <p className="flex mr-5  items-center lg:text-lg md:text-xs text-sm text-purple">
+                    <a href={item.link}>client</a>
+                    <IoCodeSlash className="ml-1" color="#CBACF9" />
                   </p>
-                  <p className="flex lg:text-xl md:text-xs text-sm text-purple">
-                    <a href={item.link}> server-code</a>
+                  <p className="flex  mr-5 items-center lg:text-lg md:text-xs text-sm text-purple">
+                    <a href={item.link}>server</a>
+                    <IoCodeSlash className="ml-1" color="#CBACF9" />
                   </p>
-                  <p className="flex lg:text-xl md:text-xs text-sm text-purple">
+                  <p className="flex  mr-5 items-center lg:text-lg md:text-xs text-sm text-purple">
                     <a href={item.link}>Live Site</a>
-                    <FaLocationArrow className="ms-3" color="#CBACF9" />
+                    <FaLocationArrow className="ml-1" color="#CBACF9" />
                   </p>
                 </div>
               </div>
             </PinContainer>
           </div>
         ))}
+      </div>
+      <div className="flex justify-center m-5 items-center gap-4">
+        <Link href="/projects" download>
+          <MagicButton
+            title="View All Projects"
+            icon={<FaLocationArrow />}
+            position="right"
+          />
+        </Link>
       </div>
     </div>
   );

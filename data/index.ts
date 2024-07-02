@@ -1,10 +1,3 @@
-export const navItems = [
-  { name: "About", link: "#about" },
-  { name: "Projects", link: "#projects" },
-  { name: "Testimonials", link: "#testimonials" },
-  { name: "Contact", link: "#contact" },
-];
-
 export const gridItems = [
   {
     id: 1,
@@ -205,13 +198,26 @@ export const socialMedia = [
   {
     id: 1,
     img: "/git.svg",
+    link: "https://github.com/fl9mdasif",
   },
   {
     id: 2,
+    link: "",
     img: "/twit.svg",
   },
   {
     id: 3,
+    link: "https://www.linkedin.com/in/fl9mdasif/",
     img: "/link.svg",
+  },
+  {
+    id: 4,
+    link: "https://www.facebook.com/devmdasifofficial",
+    img: "/fb.svg",
+  },
+  {
+    id: 5,
+    link: "https://www.youtube.com/channel/UCqYCxH8bUk-P4EI65anyKOg",
+    img: "/yt.svg",
   },
 ];
