@@ -133,7 +133,6 @@ export const BackgroundBeams = React.memo(
             </radialGradient>
           </defs>
         </svg>
-        hi
       </div>
     );
   }

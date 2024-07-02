@@ -2,6 +2,10 @@
 
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
+import { AnimatedTooltipPreview } from "@/components/MyTechStack";
+import { AnimatedTooltip } from "@/components/ui/AnimatedTooltip";
+import RecentProjects from "@/components/ui/RecentProjects";
+import { myTechStacks } from "@/constants";
 
 const Home = () => {
   return (
@@ -10,8 +14,9 @@ const Home = () => {
         {/* <FloatingNav navItems={navItems} /> */}
         <Hero />
         <Grid />
-        {/*
+        <AnimatedTooltipPreview />
         <RecentProjects />
+        {/*
         <Clients />
         <Experience />
         <Approach />
