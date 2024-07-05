@@ -1,11 +1,14 @@
 "use client";
 
+import Approach from "@/components/Approach";
+import Clients from "@/components/Clients";
+import Experience from "@/components/Experiences";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import { AnimatedTooltipPreview } from "@/components/MyTechStack";
 import RecentProjects from "@/components/ui/RecentProjects";
-import Footer from "@/components/ui/shared/Footer";
-import NavBar from "@/components/ui/shared/Navbar";
+import Footer from "@/components/shared/Footer";
+import NavBar from "@/components/shared/Navbar";
 
 const Home = () => {
   return (
@@ -16,11 +19,9 @@ const Home = () => {
         <Grid />
         <AnimatedTooltipPreview />
         <RecentProjects />
-        {/*
         <Clients />
         <Experience />
         <Approach />
-        */}
         <Footer />
       </div>
     </main>

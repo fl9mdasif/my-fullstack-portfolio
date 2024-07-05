@@ -3,12 +3,13 @@ import React from "react";
 import {
   IconBulb,
   IconFiles,
+  IconFileText,
   IconHome,
   IconLogin,
   IconMessage,
   IconUser,
 } from "@tabler/icons-react";
-import { FloatingNav } from "../FloatingNav";
+import { FloatingNav } from "../ui/FloatingNav";
 
 const NavBar2 = () => {
   // nav items
@@ -24,6 +25,13 @@ const NavBar2 = () => {
       link: "/contact",
       icon: (
         <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
+      ),
+    },
+    {
+      name: "Blogs",
+      link: "/blog",
+      icon: (
+        <IconFileText className="h-4 w-4 text-neutral-500 dark:text-white" />
       ),
     },
   ];

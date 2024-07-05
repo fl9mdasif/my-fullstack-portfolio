@@ -45,9 +45,9 @@ const Hero = () => {
           />
 
           <p className="text-center md:tracking-wider mb-4 text-sm md:text-lg lg:text-2xl">
-            I specialize in creating intuitive front-end designs and powerful
-            back-end systems to deliver complete web solutions. Transforming
-            Concepts into Seamless User Experiences
+            I specialize in creating intuitive front-end designs and robust,
+            powerful back-end systems to deliver complete web solutions.
+            Transforming concepts into seamless user experiences.
           </p>
           <div className="flex justify-center items-center gap-4">
             <a href="#recentProjects">
