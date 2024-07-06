@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./provider";
+import { Providers } from "./provider";
+import Footer from "@/components/shared/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,14 +19,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
+        <Providers
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
           {children}
-        </ThemeProvider>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

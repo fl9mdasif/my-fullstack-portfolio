@@ -11,7 +11,6 @@ const Projects = () => {
     <div>
       <NavBar2 />
       <ProjectParallax products={projects} />
-      <Footer />
     </div>
   );
 };
