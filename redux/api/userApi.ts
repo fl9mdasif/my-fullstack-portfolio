@@ -28,7 +28,7 @@ const UserApi = baseApi.injectEndpoints({
         url: "/profile/me",
         method: "GET",
       }),
-      providesTags: [tagTypes.pets],
+      providesTags: [tagTypes.user],
     }),
 
     getAllUsers: build.query({

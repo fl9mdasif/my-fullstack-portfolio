@@ -1,10 +1,10 @@
 // // import BlogDetails from "@/components/ui/BlogDetails";
 
-// interface BlogId {
-//   params: {
-//     blogId: string;
-//   };
-// }
+interface BlogId {
+  params: {
+    blogId: string;
+  };
+}
 
 // const BlogDetailPage = async ({ params }: BlogId) => {
 //   //   console.log(params);
@@ -22,3 +22,11 @@
 // };
 
 // export default BlogDetailPage;
+import React from "react";
+
+const page = ({ params }: BlogId) => {
+  console.log(params);
+  return <div>Blog details</div>;
+};
+
+export default page;

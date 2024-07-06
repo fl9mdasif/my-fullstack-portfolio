@@ -10,7 +10,7 @@ const blogApi = baseApi.injectEndpoints({
         contentType: "application/json",
         data,
       }),
-      invalidatesTags: [tagTypes.projects],
+      invalidatesTags: [tagTypes.blogs],
     }),
 
     getAllBlogs: build.query({
@@ -39,7 +39,7 @@ const blogApi = baseApi.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: [tagTypes.projects],
+      invalidatesTags: [tagTypes.blogs],
     }),
 
     deletePet: build.mutation({
@@ -47,7 +47,7 @@ const blogApi = baseApi.injectEndpoints({
         url: `/pets/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.projects],
+      invalidatesTags: [tagTypes.blogs],
     }),
   }),
 });
