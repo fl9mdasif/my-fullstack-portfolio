@@ -9,56 +9,60 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { TProject } from "@/types/common";
+import LoadingSpinner from "../shared/loading";
 
 export const ProjectParallax = ({
-  products,
+  projectsList,
+  isLoading,
 }: {
-  products: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  }[];
+  projectsList: TProject[];
+  isLoading: boolean;
 }) => {
-  const firstRow = products.slice(0, 5);
-  const secondRow = products.slice(5, 10);
-  const thirdRow = products.slice(10, 15);
+  const firstRow = projectsList.slice(0, 5);
+  const secondRow = projectsList.slice(5, 10);
+  const thirdRow = projectsList.slice(10, 15);
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
+  // console.log("fetch project", firstRow);
+
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
   const translateX = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, 1000]),
-    springConfig
+    springConfig,
   );
   const translateXReverse = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, -1000]),
-    springConfig
+    springConfig,
   );
   const rotateX = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [15, 0]),
-    springConfig
+    springConfig,
   );
   const opacity = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
-    springConfig
+    springConfig,
   );
   const rotateZ = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-    springConfig
+    springConfig,
   );
   const translateY = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
-    springConfig
+    springConfig,
   );
+
   return (
     <div
       ref={ref}
       className="h-[300vh] py-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
+      {isLoading && <LoadingSpinner />}
       <Header />
       <motion.div
         style={{
@@ -70,29 +74,29 @@ export const ProjectParallax = ({
         className=""
       >
         <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
-          {firstRow.map((product) => (
+          {firstRow.map((project) => (
             <ProductCard
-              product={product}
+              project={project}
               translate={translateX}
-              key={product.title}
+              key={project.title}
             />
           ))}
         </motion.div>
         <motion.div className="flex flex-row  mb-20 space-x-20 ">
-          {secondRow.map((product) => (
+          {secondRow.map((project) => (
             <ProductCard
-              product={product}
+              project={project}
               translate={translateXReverse}
-              key={product.title}
+              key={project.title}
             />
           ))}
         </motion.div>
         <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
-          {thirdRow.map((product) => (
+          {thirdRow.map((project) => (
             <ProductCard
-              product={product}
+              project={project}
               translate={translateX}
-              key={product.title}
+              key={project.title}
             />
           ))}
         </motion.div>
@@ -108,23 +112,19 @@ export const Header = () => {
         The Ultimate <br /> development studio
       </h1>
       <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-        We build beautiful products with the latest technologies and frameworks.
+        We build beautiful projects with the latest technologies and frameworks.
         We are a team of passionate developers and designers that love to build
-        amazing products.
+        amazing projects.
       </p>
     </div>
   );
 };
 
 export const ProductCard = ({
-  product,
+  project,
   translate,
 }: {
-  product: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  };
+  project: TProject;
   translate: MotionValue<number>;
 }) => {
   return (
@@ -135,24 +135,24 @@ export const ProductCard = ({
       whileHover={{
         y: -20,
       }}
-      key={product.title}
+      key={project.title}
       className="group/product h-96 w-[30rem] relative flex-shrink-0"
     >
       <Link
-        href={product.link}
+        href={`/projects/${project._id}`}
         className="block group-hover/product:shadow-2xl "
       >
         <Image
-          src={product.thumbnail}
+          src={project.image || "/placeholder.png"}
           height="600"
           width="600"
-          className="object-cover object-left-top absolute h-full w-full inset-0"
-          alt={product.title}
+          className="object-cover absolute h-full w-full inset-0"
+          alt={project.title}
         />
       </Link>
       <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
       <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
-        {product.title}
+        {project.title}
       </h2>
     </motion.div>
   );

@@ -8,6 +8,22 @@ export type TMeta = {
   total: number;
 };
 
+export interface TProject {
+  _id?: string
+  title: string;
+  description: string;
+  technologies: string[];
+  category: 'Frontend' | 'Backend' | 'Database' | 'DevOps' | 'Tool' | 'Language' | 'AI'| string;
+  githubClient?: string;
+  githubServer?: string;
+  liveUrl?: string;
+  image?: string;
+  gallery?: string[];
+  status?: 'Live' | 'In Development' | 'On Hold' | 'Completed' | string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type UserRole = keyof typeof USER_ROLE;
 
 // export interface DrawerItem {
