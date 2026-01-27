@@ -27,6 +27,7 @@ const BlogDetails = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(0);
   const [shareMessage, setShareMessage] = useState("");
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const { data: blogData, isLoading, error } = useGetSingleBlogQuery(blogId);
   const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation();
@@ -42,6 +43,10 @@ const BlogDetails = () => {
       // Check if user has liked this blog (stored in localStorage)
       const likedBlogs = JSON.parse(localStorage.getItem("likedBlogs") || "{}");
       setIsLiked(likedBlogs[blogId] || false);
+
+      // Check if user has bookmarked this blog
+      const bookmarkedBlogs = JSON.parse(localStorage.getItem("bookmarkedBlogs") || "{}");
+      setIsBookmarked(bookmarkedBlogs[blogId] || false);
     }
   }, [blog, blogId]);
 
@@ -49,7 +54,7 @@ const BlogDetails = () => {
     return <LoadingSpinner />;
   }
 
-  if (error) {
+  if (error || !blog) {
     console.error("Blog API Error:", error);
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -118,23 +123,62 @@ const BlogDetails = () => {
     }
   };
 
-  if (!blog) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-red-400 mb-4">
-            Blog Not Found
-          </h1>
-          <Link
-            href="/blog"
-            className="text-blue-400 hover:text-blue-300 transition-colors"
-          >
-            ← Back to Blogs
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // Handle share button click
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = blog.title;
+    const text = `Check out this article: ${title}`;
+
+    try {
+      // Check if Web Share API is available
+      if (navigator.share) {
+        await navigator.share({
+          title: title,
+          text: text,
+          url: url,
+        });
+        setShareMessage("Shared successfully!");
+      } else {
+        // Fallback: Copy URL to clipboard
+        await navigator.clipboard.writeText(url);
+        setShareMessage("Link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+      // Fallback for older browsers or if share fails
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareMessage("Link copied to clipboard!");
+      } catch (clipboardError) {
+        console.error("Error copying to clipboard:", clipboardError);
+        setShareMessage("Unable to share. Please copy the URL manually.");
+      }
+    }
+
+    // Clear message after 3 seconds
+    setTimeout(() => setShareMessage(""), 3000);
+  };
+
+  // Handle bookmark button click
+  const handleBookmark = () => {
+    const newIsBookmarked = !isBookmarked;
+    setIsBookmarked(newIsBookmarked);
+
+    // Update localStorage
+    const bookmarkedBlogs = JSON.parse(localStorage.getItem("bookmarkedBlogs") || "{}");
+    if (newIsBookmarked) {
+      bookmarkedBlogs[blogId] = {
+        title: blog.title,
+        coverImage: blog.coverImage,
+        author_name: blog.author_name,
+        createdAt: blog.createdAt,
+        bookmarkedAt: new Date().toISOString(),
+      };
+    } else {
+      delete bookmarkedBlogs[blogId];
+    }
+    localStorage.setItem("bookmarkedBlogs", JSON.stringify(bookmarkedBlogs));
+  };
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -215,14 +259,31 @@ const BlogDetails = () => {
                       : "Like Article"}
                 </button>
 
-                <button className="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors">
+                <button
+                  onClick={handleShare}
+                  className="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors relative"
+                >
                   <IconShare className="w-5 h-5 mr-2" />
                   Share
+                  {shareMessage && (
+                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                      {shareMessage}
+                    </span>
+                  )}
                 </button>
 
-                <button className="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors">
-                  <IconBookmark className="w-5 h-5 mr-2" />
-                  Save
+                <button
+                  onClick={handleBookmark}
+                  className={`inline-flex items-center px-6 py-3 font-medium rounded-lg transition-colors ${
+                    isBookmarked
+                      ? "bg-blue-700 hover:bg-blue-800 text-white"
+                      : "bg-gray-700 hover:bg-gray-600 text-white"
+                  }`}
+                >
+                  <IconBookmark
+                    className={`w-5 h-5 mr-2 ${isBookmarked ? "fill-current" : ""}`}
+                  />
+                  {isBookmarked ? "Saved" : "Save"}
                 </button>
               </div>
             </div>

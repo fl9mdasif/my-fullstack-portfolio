@@ -108,7 +108,7 @@ const Contact = () => {
               />
 
               <p className="text-center md:tracking-wider text-sm md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
-                I'm always open to discussing new opportunities, interesting
+                Im always open to discussing new opportunities, interesting
                 projects, or just having a chat about technology. Feel free to
                 reach out!
               </p>
@@ -129,7 +129,9 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="text-gray-400 text-sm">Email</p>
-                        <p className="text-white">asif@gmail.com</p>
+                        <p className="text-white">
+                          asifalazad.fullstack@gmail.com
+                        </p>
                       </div>
                     </div>
 
@@ -139,7 +141,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="text-gray-400 text-sm">Phone</p>
-                        <p className="text-white">+880 123 456 7890</p>
+                        <p className="text-white">+880 1605 855 875</p>
                       </div>
                     </div>
 
@@ -156,24 +158,6 @@ const Contact = () => {
                 </div>
 
                 {/* Social Media */}
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-6">
-                    Follow Me
-                  </h3>
-                  <div className="flex gap-4">
-                    {socialMedia.map((social) => (
-                      <a
-                        key={social.id}
-                        href={social.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-12 h-12 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors duration-300 hover:scale-110"
-                      >
-                        {getSocialIcon(social.img)}
-                      </a>
-                    ))}
-                  </div>
-                </div>
               </div>
 
               {/* Contact Form */}
