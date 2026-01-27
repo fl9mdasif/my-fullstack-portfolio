@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useGetSingleProjectQuery } from "@/redux/api/projectApi";
 import LoadingSpinner from "@/components/shared/loading";
-// import NavBar from "@/components/shared/NavBar";
 
 import {
   IconArrowLeft,
@@ -14,7 +13,7 @@ import {
   IconCode,
   IconEye,
 } from "@tabler/icons-react";
-import { getTechStackIcons } from "@/utils/techStackMatcher";
+import { getTechStackIcons, cleanDescription } from "@/utils/techStackMatcher";
 import NavBar from "@/components/shared/Navbar";
 
 const ProjectDetails = () => {
@@ -29,12 +28,6 @@ const ProjectDetails = () => {
   } = useGetSingleProjectQuery(projectId, {
     skip: !projectId,
   });
-
-  //   console.log("Project ID:", projectId);
-  //   console.log("Is Loading:", isLoading);
-  //   console.log("Is Fetching:", isFetching);
-  //   console.log("API Response:", projectData);
-  //   console.log("API Error:", error);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -169,6 +162,7 @@ const ProjectDetails = () => {
                       >
                         <IconBrandGithub className="w-5 h-5 mr-2" />
                         Frontend
+                        <IconCode className="w-4 h-4 ml-2" />
                       </a>
                     )}
                     {project.githubServer && (
@@ -180,6 +174,7 @@ const ProjectDetails = () => {
                       >
                         <IconBrandGithub className="w-5 h-5 mr-2" />
                         Backend
+                        <IconCode className="w-4 h-4 ml-2" />
                       </a>
                     )}
                   </div>
@@ -198,7 +193,7 @@ const ProjectDetails = () => {
                   About This Project
                 </h2>
                 <p className="text-gray-300 leading-relaxed">
-                  {project.description}
+                  {cleanDescription(project.description)}
                 </p>
               </div>
 

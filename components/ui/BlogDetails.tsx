@@ -38,7 +38,7 @@ const BlogDetails = ({ blog }: { blog: TBlog }) => {
         <div className="flex justify-between items-center mt-5">
           <div className="flex items-center text-2xl">
             <AiFillLike className="text-accent" />
-            <span className="mr-1">{blog.total_likes}</span>
+            <span className="mr-1">{blog.likes}</span>
             Likes
           </div>
         </div>

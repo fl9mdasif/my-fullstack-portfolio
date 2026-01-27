@@ -77,3 +77,16 @@ export const getTechStackIcons = (projectTechs: string[]): Array<{ iconURL: stri
     .map(tech => matchTechStack(tech))
     .filter((match): match is { iconURL: string; name: string } => match !== null);
 };
+
+/**
+ * Clean text by removing newlines and normalizing whitespace
+ * @param text - Text to clean
+ * @returns Cleaned text suitable for paragraph display
+ */
+export const cleanDescription = (text: string): string => {
+  if (!text) return '';
+  return text
+    .replace(/\n+/g, ' ') // Replace multiple newlines with single space
+    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+    .trim(); // Remove leading/trailing whitespace
+};

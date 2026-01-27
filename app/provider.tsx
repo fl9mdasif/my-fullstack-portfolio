@@ -10,7 +10,7 @@ import { store } from "../redux/store";
 export function Providers({ children, ...props }: ThemeProviderProps) {
   return (
     <Provider store={store}>
-      <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+      <NextThemesProvider {...props}>{children}</NextThemesProvider>
     </Provider>
   );
 }

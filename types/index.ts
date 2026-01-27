@@ -2,8 +2,13 @@ export interface TBlog {
   id: string;
   title: string;
   description: string;
-  publish_date: string;
-  author_name: string;
-  blog_image: string;
-  total_likes: string;
+  createAt: string;
+  author: authorDetails;
+  coverImage: string;
+  likes: number;
+}
+
+interface authorDetails {
+  _id: string;
+  email: string;
 }

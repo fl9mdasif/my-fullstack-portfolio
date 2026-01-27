@@ -2,16 +2,12 @@
 "use client";
 
 import { FaLocationArrow } from "react-icons/fa6";
-import { IoCodeSlash } from "react-icons/io5";
-
-// import { projects } from "@/data";
 import { PinContainer } from "./PinCard";
 import Link from "next/link";
 import MagicButton from "./MagicButton";
-// import { IconCode } from "@tabler/icons-react";
 import { useGetAllProjectsQuery } from "@/redux/api/projectApi";
 import { TProject } from "@/types/common";
-import { getTechStackIcons } from "@/utils/techStackMatcher";
+import { getTechStackIcons, cleanDescription } from "@/utils/techStackMatcher";
 import LoadingSpinner from "../shared/loading";
 
 const RecentProjects = () => {
@@ -62,7 +58,7 @@ const RecentProjects = () => {
                   margin: "1vh 0",
                 }}
               >
-                {project.description}
+                {cleanDescription(project.description)}
               </p>
 
               <div className="flex flex-col items-start justify-center mt-7 mb-3">
