@@ -202,12 +202,12 @@ export const socialMedia = [
   },
   {
     id: 2,
-    link: "",
-    img: "/twit.svg",
+    link: "https://wa.me/+8801605855875",
+    img: "/whatsapp.svg",
   },
   {
     id: 3,
-    link: "https://www.linkedin.com/in/fl9mdasif/",
+    link: "https://dev-mdasif-portolio.vercel.app/",
     img: "/link.svg",
   },
   {
