@@ -40,7 +40,7 @@ const Hero = () => {
 
           <TextGenerateEffect
             words="I'm Md Asif Al Azad,
-            a Full Stack Developer. "
+            Jr. Full Stack Developer. "
             className="text-center text-[40px] md:text-5xl lg:text-6xl"
           />
 
@@ -57,13 +57,17 @@ const Hero = () => {
                 position="right"
               />
             </a>
-            <Link href="/cv.pdf" download>
+            <a
+              href="https://drive.google.com/file/d/1W6ITHXW-LvLLawbHq4aPmAKViyP6zRSf/view?usp=drive_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <MagicButton
                 title="Download CV"
                 icon={<FaLocationArrow />}
                 position="right"
               />
-            </Link>
+            </a>
           </div>
         </div>
       </div>

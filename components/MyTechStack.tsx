@@ -3,7 +3,6 @@
 import { myTechStacks } from "@/constants";
 import React from "react";
 import { AnimatedTooltip } from "./ui/AnimatedTooltip";
-import { BackgroundBeams } from "./ui/BackgroundBeams";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import { Boxes } from "./ui/Boxes";
 

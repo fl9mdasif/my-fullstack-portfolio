@@ -52,8 +52,8 @@ export const BentoGridItem: any = ({
   titleClassName?: string;
   spareImg?: string;
 }) => {
-  const leftLists = ["react", "next", "redux", "Typescript"];
-  const rightLists = ["prisma", "mongoose", "express", ""];
+  const leftLists = ["TYPESCRIPT", "MERN", "NEXT", "CI/CD"];
+  const rightLists = ["AWS", "AI", "N8N", "SaaS"];
 
   const [copied, setCopied] = useState(false);
 
@@ -67,7 +67,7 @@ export const BentoGridItem: any = ({
   };
 
   const handleCopy = () => {
-    const text = "asifalazadami2021@gmail.com";
+    const text = "asifalazad.fullstack@gmail.com";
     navigator.clipboard.writeText(text);
     setCopied(true);
   };
@@ -99,9 +99,8 @@ export const BentoGridItem: any = ({
           )}
         </div>
         <div
-          className={`absolute right-0 -bottom-5 ${
-            id === 5 && "w-full opacity-80"
-          } `}
+          className={`absolute right-0 -bottom-5 ${id === 5 && "w-full opacity-80"
+            } `}
         >
           {spareImg && (
             <img
@@ -142,7 +141,7 @@ export const BentoGridItem: any = ({
 
           {/* Tech stack list div */}
           {id === 3 && (
-            <div className="flex gap-1 lg:gap-3 w-fit absolute -right-3 lg:-right-2">
+            <div className="flex gap-1 lg:gap-3 w-fit absolute right-3 lg:-right-2">
               {/* tech stack lists */}
               <div className="flex flex-col gap-3 md:gap-1 lg:gap-3">
                 {leftLists.map((item, i) => (
@@ -177,9 +176,8 @@ export const BentoGridItem: any = ({
               {/* remove focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 */}
               {/* add handleCopy() for the copy the text */}
               <div
-                className={`absolute -bottom-5 right-0 ${
-                  copied ? "block" : "block"
-                }`}
+                className={`absolute -bottom-5 right-0 ${copied ? "block" : "block"
+                  }`}
               >
                 {/* <img src="/confetti.gif" alt="confetti" /> */}
                 {/* <Lottie options={defaultOptions} height={200} width={400} /> */}
