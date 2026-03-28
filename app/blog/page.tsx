@@ -2,7 +2,6 @@
 
 import { useGetAllBlogsQuery } from "@/redux/api/blogApi";
 import LoadingSpinner from "@/components/shared/loading";
-import NavBar from "@/components/shared/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -36,9 +35,7 @@ const BlogsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <NavBar />
-
+    <div className="min-h-screen bg-[#06091f]">
       <div className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -57,7 +54,7 @@ const BlogsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogs.map((blog: any) => (
               <Link key={blog.id} href={`/blog/${blog._id}`} className="group">
-                <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10">
+                <div className="relative overflow-hidden rounded-3xl border border-white/[0.1] bg-black-100/50 backdrop-blur-md transition-all duration-300 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 h-full flex flex-col">
                   {/* Blog Image */}
                   <div className="relative h-48 overflow-hidden">
                     <Image

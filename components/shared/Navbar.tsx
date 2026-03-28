@@ -20,7 +20,7 @@ const NavBar = () => {
     },
     {
       name: "Skills",
-      link: "#skills",
+      link: "/#skills",
       icon: <IconBulb className="h-4 w-4 text-neutral-500 dark:text-white" />,
     },
     {
@@ -37,7 +37,7 @@ const NavBar = () => {
     },
     // {
     //   name: "About",
-    //   link: "#about",
+    //   link: "/#about",
     //   icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
     // },
 

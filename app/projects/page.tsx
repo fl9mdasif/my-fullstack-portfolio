@@ -1,12 +1,7 @@
 "use client";
 import { ProjectParallax } from "@/components/ui/ProjectParallax";
-import NavBar from "@/components/shared/Navbar";
-import { projects } from "@/constants";
-import Footer from "@/components/shared/Footer";
-
-import React from "react";
 import { useGetAllProjectsQuery } from "@/redux/api/projectApi";
-import LoadingSpinner from "@/components/shared/loading";
+import React from "react";
 
 const Projects = () => {
   const { data: projectsData, refetch, isLoading } = useGetAllProjectsQuery({});
@@ -16,8 +11,7 @@ const Projects = () => {
   // console.log("fetch project", projectsList);
 
   return (
-    <div>
-      <NavBar />
+    <div className="bg-[#06091f] min-h-screen">
       <ProjectParallax isLoading={isLoading} projectsList={projectsList} />
     </div>
   );

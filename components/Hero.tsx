@@ -50,7 +50,7 @@ const Hero = () => {
             Transforming concepts into seamless user experiences.
           </p>
           <div className="flex justify-center items-center gap-4">
-            <a href="#recentProjects">
+            <a href="/#recentProjects">
               <MagicButton
                 title="Show my work"
                 icon={<FaLocationArrow />}

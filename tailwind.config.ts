@@ -27,7 +27,7 @@ const config: Config = {
       colors: {
         black: {
           DEFAULT: "#000",
-          100: "#000319",
+          100: "#06091f",
           200: "rgba(17, 25, 40, 0.75)",
           300: "rgba(255, 255, 255, 0.125)",
         },
@@ -162,6 +162,7 @@ const config: Config = {
   },
   plugins: [
     require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
     addVariablesForColors,
     function ({ matchUtilities, theme }: any) {
       matchUtilities(

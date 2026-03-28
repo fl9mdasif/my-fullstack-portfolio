@@ -22,12 +22,13 @@ const RecentProjects = () => {
       </h1>
       {isLoading && <LoadingSpinner />}
 
-      <div className="flex flex-wrap items-center justify-center p-4 gap-16 mt-10">
+      <div className="flex flex-wrap items-center justify-center pt-4 gap-16 mt-10 pb-5">
         {projectsList.map((project: TProject) => (
           <div
-            className="lg:min-h-[32.5rem] h-[25rem] flex items-center justify-center sm:w-96 w-[80vw]"
+            className="lg:min-h-[38rem] h-[33rem] flex items-center justify-center sm:w-96 w-[80vw] mb-20"
             key={project._id || project.title}
           >
+
             <PinContainer
               title={project.title}
               href={`/projects/${project._id}`}
@@ -62,12 +63,13 @@ const RecentProjects = () => {
               </p>
 
               <div className="flex flex-col items-start justify-center mt-7 mb-3">
-                <div className="flex flex-wrap gap-2">
+                {/* Show technologies with icons */}
+                <div className="flex flex-wrap gap-2 items-start min-h-[50px] md:min-h-[80px] lg:min-h-[90px] w-full">
                   {getTechStackIcons(project.technologies).map(
                     (tech, index) => (
                       <div
                         key={index}
-                        className="border border-white/[.2] rounded-full bg-black w-8 h-8 lg:w-10 lg:h-10 flex justify-center items-center gap-0"
+                        className="border border-white/[.2] bg-white rounded-full  w-8 h-8 lg:w-10 lg:h-10 flex justify-center items-center gap-0"
                         title={tech.name}
                       >
                         <img
@@ -84,7 +86,7 @@ const RecentProjects = () => {
                     .map((tech, index) => (
                       <span
                         key={`text-${index}`}
-                        className="border border-white/[.2] rounded-full bg-black lg:px-3 lg:py-1 px-2 py-1 text-xs lg:text-sm flex justify-center items-center"
+                        className="border border-white/[.2] rounded-full  lg:px-3 lg:py-1 px-2 py-1 text-xs lg:text-sm flex justify-center items-center text-white"
                       >
                         {tech}
                       </span>
@@ -95,7 +97,7 @@ const RecentProjects = () => {
                   <p className="flex  mr-5 items-center lg:text-lg md:text-xs text-sm text-purple">
                     <Link
                       href={`/projects/${project._id}`}
-                      className="pt-3 block group-hover/product:shadow-2xl "
+                      className="pt-3 block "
                     >
                       View Project Details
                     </Link>

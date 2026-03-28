@@ -8,7 +8,7 @@ import {
   useUpdateBlogMutation,
 } from "@/redux/api/blogApi";
 import LoadingSpinner from "@/components/shared/loading";
-import NavBar from "@/components/shared/Navbar";
+import { Spotlight } from "@/components/ui/Spotlight";
 import {
   IconArrowLeft,
   IconCalendar,
@@ -181,8 +181,20 @@ const BlogDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <NavBar />
+    <div className="min-h-screen bg-[#06091f]">
+      {/* Spotlight for premium look */}
+      <div className="relative overflow-hidden">
+        <Spotlight
+          className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen"
+          fill="white"
+        />
+        <Spotlight
+          className="h-[80vh] w-[50vw] top-10 left-full"
+          fill="purple"
+        />
+        <Spotlight className="left-80 top-28 h-[80vh] w-[50vw]" fill="blue" />
+      </div>
+
       {isLoading && <LoadingSpinner />}
 
       <div className="pt-20 pb-12">
@@ -198,8 +210,8 @@ const BlogDetails = () => {
 
           {/* Hero Section */}
           <div className="relative mb-12">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl blur-3xl"></div>
-            <div className="relative bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 md:p-12">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-3xl blur-3xl"></div>
+            <div className="relative rounded-3xl border border-white/[0.1] bg-black-100/50 backdrop-blur-md p-8 md:p-12">
               {/* Blog Image */}
               <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-700 mb-8">
                 <img
@@ -243,11 +255,10 @@ const BlogDetails = () => {
                 <button
                   onClick={handleLike}
                   disabled={isUpdating}
-                  className={`inline-flex items-center px-6 py-3 font-medium rounded-lg transition-colors ${
-                    isLiked
-                      ? "bg-red-700 hover:bg-red-800 text-white"
-                      : "bg-red-600 hover:bg-red-700 text-white"
-                  } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all hover:scale-105 active:scale-95 ${isLiked
+                      ? "bg-red-500/20 border border-red-500/50 text-red-500"
+                      : "bg-white/5 border border-white/[0.1] text-white hover:bg-white/10"
+                    } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <IconHeart
                     className={`w-5 h-5 mr-2 ${isLiked ? "fill-current" : ""}`}
@@ -261,12 +272,12 @@ const BlogDetails = () => {
 
                 <button
                   onClick={handleShare}
-                  className="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors relative"
+                  className="inline-flex items-center px-6 py-3 bg-white/5 border border-white/[0.1] hover:bg-white/10 text-white font-medium rounded-xl transition-all hover:scale-105 relative"
                 >
                   <IconShare className="w-5 h-5 mr-2" />
                   Share
                   {shareMessage && (
-                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                    <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg z-50 animate-bounce">
                       {shareMessage}
                     </span>
                   )}
@@ -274,11 +285,10 @@ const BlogDetails = () => {
 
                 <button
                   onClick={handleBookmark}
-                  className={`inline-flex items-center px-6 py-3 font-medium rounded-lg transition-colors ${
-                    isBookmarked
-                      ? "bg-blue-700 hover:bg-blue-800 text-white"
-                      : "bg-gray-700 hover:bg-gray-600 text-white"
-                  }`}
+                  className={`inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all hover:scale-105 ${isBookmarked
+                      ? "bg-blue-500/20 border border-blue-500/50 text-blue-500"
+                      : "bg-white/5 border border-white/[0.1] text-white hover:bg-white/10"
+                    }`}
                 >
                   <IconBookmark
                     className={`w-5 h-5 mr-2 ${isBookmarked ? "fill-current" : ""}`}
@@ -290,16 +300,23 @@ const BlogDetails = () => {
           </div>
 
           {/* Blog Content */}
-          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-8 md:p-12">
-            <div className="prose prose-lg prose-invert max-w-none">
-              <div className="text-gray-300 leading-relaxed whitespace-pre-line">
+          <div className="relative rounded-3xl border border-white/[0.1] bg-black-100/50 backdrop-blur-md p-8 md:p-12 mb-12">
+            <div className="prose prose-lg prose-invert max-w-none 
+              prose-headings:text-white prose-headings:font-bold prose-headings:mb-4
+              prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
+              prose-strong:text-white prose-strong:font-semibold
+              prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-6
+              prose-ol:list-decimal prose-ol:ml-6 prose-ol:mb-6
+              prose-li:text-gray-300 prose-li:mb-2
+              prose-hr:border-white/[0.1] prose-hr:my-10">
+              <div className="whitespace-pre-line">
                 {cleanDescription(blog.description)}
               </div>
             </div>
           </div>
 
           {/* Author Section */}
-          <div className="mt-12 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-8">
+          <div className="bg-black-100/50 backdrop-blur-md border border-white/[0.1] rounded-3xl p-8">
             <div className="flex gap-2 items-center ">
               {/* <IconUser className="w-4 h-4 text-gray-300" /> */}
               {/* <div className="w-8 mr-1 rounded-full"> */}
@@ -325,7 +342,7 @@ const BlogDetails = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* This would be populated with related blogs */}
-              <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-6">
+              {/* <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-6">
                 <div className="text-gray-400 text-center">
                   Related articles would appear here
                 </div>
@@ -334,7 +351,7 @@ const BlogDetails = () => {
                 <div className="text-gray-400 text-center">
                   Related articles would appear here
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

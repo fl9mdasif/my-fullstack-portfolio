@@ -100,33 +100,33 @@ export const projects = [
 export const testimonials = [
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "Working with Asif was a game-changer for our platform. He didn't just write code; he understood our business logic and implemented a seamless AI integration that boosted our efficiency. His expertise in Next.js and Tailwind is top-notch. A truly reliable engineer for any complex project.",
+    name: "Razu Ahmed",
+    title: "Founder of Sultan Bazar",
   },
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "Asif’s ability to bridge the gap between frontend aesthetics and backend performance is remarkable. He took ownership of our BloodHub project and transformed it into a scalable, user-centric application. His dedication to clean code and system architecture is what sets him apart.",
+    name: "Md. Mahbubur Rahman",
+    title: "Product Manager at TechFlow Solutions",
   },
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "I was impressed by Asif's proactive approach. When we were building our management system, he suggested and implemented several automated workflows using n8n that saved us hours of manual work. He’s not just a developer; he's a problem solver who understands the big picture.",
+    name: "Ariful Islam",
+    title: "Head of Operations, BUBT Research Lab",
   },
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "Finding a developer who understands both AI and DevOps is rare. Asif helped us containerize our applications using Docker and deployed them on AWS effortlessly. His 'AI Resume Analyzer' project is a testament to his innovative thinking and technical depth.",
+    name: "Md. Habib Ahmed",
+    title: "Software Architect, Global Tech Inc.",
   },
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "Asif is exceptionally professional and punctual. He delivered our primary school management portal ahead of schedule with zero compromises on quality. His mastery of the MERN stack and his eye for detail made the entire development process smooth and stress-free.",
+    name: "Rahat Kabir",
+    title: "Director, Green Valley Academy",
   },
 ];
 
@@ -200,23 +200,26 @@ export const socialMedia = [
     img: "/git.svg",
     link: "https://github.com/fl9mdasif",
   },
+
   {
     id: 2,
+    link: "https://www.linkedin.com/in/fl9mdasif/",
+    img: "/link.svg",
+  },
+  // {
+  //   id: 3,
+  //   link: "https://dev-mdasif-portolio.vercel.app/",
+  //   img: "/world-globe.svg",
+  // },
+  {
+    id: 3,
     link: "https://wa.me/+8801605855875",
     img: "/whatsapp.svg",
   },
-  {
-    id: 3,
-    link: "https://dev-mdasif-portolio.vercel.app/",
-    img: "/link.svg",
-  },
+
+
   {
     id: 4,
-    link: "https://www.facebook.com/devmdasifofficial",
-    img: "/fb.svg",
-  },
-  {
-    id: 5,
     link: "https://www.youtube.com/channel/UCqYCxH8bUk-P4EI65anyKOg",
     img: "/yt.svg",
   },

@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import NavBar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
 import MagicButton from "@/components/ui/MagicButton";
+import { toast } from "sonner";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { TextGenerateEffect } from "@/components/ui/TextGenerateEffect";
 import { socialMedia } from "@/data";
@@ -42,19 +41,35 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+      const result = await response.json();
 
-    setIsSubmitting(false);
-    alert("Thank you for your message! I'll get back to you soon.");
+      if (response.ok) {
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+        toast.success("Message received by Asif Al Azad");
+      } else {
+        toast.error(`Error: ${result.error || 'Failed to send message'}`);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getSocialIcon = (img: string) => {
@@ -68,8 +83,8 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black-100">
-      <NavBar />
+    <div className="min-h-screen bg-[#06091f]">
+
 
       {/* Hero Section */}
       <div className="pt-20 pb-12">
@@ -249,7 +264,7 @@ const Contact = () => {
                     title={isSubmitting ? "Sending..." : "Send Message"}
                     icon={<IconSend className="w-5 h-5" />}
                     position="right"
-                    handleClick={() => {}}
+                    handleClick={() => { }}
                     otherClasses={
                       isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                     }
@@ -260,8 +275,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };
