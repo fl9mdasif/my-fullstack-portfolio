@@ -9,6 +9,7 @@ const Grid = () => {
           <BentoGridItem
             id={item.id}
             key={i}
+            index={i}
             title={item.title}
             description={item.description}
             // remove icon prop

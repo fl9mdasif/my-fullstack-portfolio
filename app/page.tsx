@@ -2,27 +2,23 @@
 
 import Approach from "@/components/Approach";
 import Clients from "@/components/Clients";
-// import Experience from "@/components/Experiences";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import { AnimatedTooltipPreview } from "@/components/MyTechStack";
 import RecentProjects from "@/components/ui/RecentProjects";
-// import Footer from "@/components/shared/Footer";
-// import NavBar from "@/components/shared/Navbar";
 
 const Home = () => {
   return (
-    <main className="relative bg-black-100 flex justify-center items-center flex-col overflow-hidden mx-auto sm:px-10 px-5">
-      <div className="max-w-7xl w-full">
-        {/* <NavBar /> */}
+    <main className="relative bg-black-100 flex justify-center items-center flex-col overflow-hidden mx-auto">
+      <div className="w-full">
         <Hero />
-        <Grid />
-        <AnimatedTooltipPreview />
-        <RecentProjects />
-        <Clients />
-        {/* <Experience /> */}
-        <Approach />
-        {/* <Footer /> */}
+        <div className="max-w-7xl w-full mx-auto px-5 sm:px-10">
+          <Grid />
+          <AnimatedTooltipPreview />
+          <RecentProjects />
+          <Clients />
+          <Approach />
+        </div>
       </div>
     </main>
   );

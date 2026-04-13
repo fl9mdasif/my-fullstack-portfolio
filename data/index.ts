@@ -42,12 +42,12 @@ export const gridItems = [
 
   {
     id: 5,
-    title: "Currently building a JS Animation library",
+    title: "I am learning Devops, Cloud Computing & AI",
     description: "The Inside Scoop",
     className: "md:col-span-3 md:row-span-2",
-    imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",
-    titleClassName: "justify-center md:justify-start lg:justify-center",
-    img: "/b5.svg",
+    imgClassName: "absolute right-0 bottom-0 md:w-96 w-full",
+    titleClassName: "justify-center md:justify-start lg:justify-start",
+    img: "/docker.png",
     spareImg: "/grid.svg",
   },
   {

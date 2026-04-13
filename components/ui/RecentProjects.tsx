@@ -29,11 +29,8 @@ const RecentProjects = () => {
             key={project._id || project.title}
           >
 
-            <PinContainer
-              title={project.title}
-              href={`/projects/${project._id}`}
-            >
-              <div className="relative flex items-center justify-center sm:w-96 w-[80vw] overflow-hidden h-[20vh] lg:h-[30vh] mb-10">
+            <div>
+              <Link href={`/projects/${project._id}`} className="relative flex items-center justify-center sm:w-96 w-[80vw] overflow-hidden h-[20vh] lg:h-[30vh] mb-10">
                 <div
                   className="relative w-full h-full overflow-hidden lg:rounded-3xl"
                   style={{ backgroundColor: "#13162D" }}
@@ -46,7 +43,7 @@ const RecentProjects = () => {
                     className="z-10 object-cover h-full w-full absolute bottom-0"
                   />
                 </div>
-              </div>
+              </Link>
 
               <h1 className="font-bold lg:text-2xl md:text-xl text-base line-clamp-1">
                 {project.title}
@@ -106,7 +103,7 @@ const RecentProjects = () => {
                   </p>
                 </div>
               </div>
-            </PinContainer>
+            </div>
           </div>
         ))}
       </div>

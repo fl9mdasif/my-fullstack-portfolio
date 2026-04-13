@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 // Also install this npm i --save-dev @types/react-lottie
 import Lottie from "react-lottie";
@@ -32,7 +33,7 @@ export const BentoGrid = ({
   );
 };
 
-export const BentoGridItem: any = ({
+export const BentoGridItem = ({
   className,
   id,
   title,
@@ -42,6 +43,7 @@ export const BentoGridItem: any = ({
   imgClassName,
   titleClassName,
   spareImg,
+  index,
 }: {
   className?: string;
   id: number;
@@ -51,6 +53,7 @@ export const BentoGridItem: any = ({
   imgClassName?: string;
   titleClassName?: string;
   spareImg?: string;
+  index?: number;
 }) => {
   const leftLists = ["TYPESCRIPT", "MERN", "NEXT", "CI/CD"];
   const rightLists = ["AWS", "AI", "N8N", "SaaS"];
@@ -73,7 +76,15 @@ export const BentoGridItem: any = ({
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{
+        duration: 0.6,
+        delay: (index ?? 0) * 0.1,
+        ease: "easeOut"
+      }}
       className={cn(
         // remove p-4 rounded-3xl dark:bg-black dark:border-white/[0.2] bg-white  border border-transparent, add border border-white/[0.1] overflow-hidden relative
         "row-span-1 relative overflow-hidden rounded-3xl border border-white/[0.1] group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none justify-between flex flex-col space-y-4",
@@ -141,7 +152,7 @@ export const BentoGridItem: any = ({
 
           {/* Tech stack list div */}
           {id === 3 && (
-            <div className="flex gap-1 lg:gap-3 w-fit absolute right-3 lg:-right-2">
+            <div className="flex gap-1 lg:gap-3 w-fit absolute right-1 lg:-right-1">
               {/* tech stack lists */}
               <div className="flex flex-col gap-3 md:gap-1 lg:gap-3">
                 {leftLists.map((item, i) => (
@@ -194,6 +205,6 @@ export const BentoGridItem: any = ({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

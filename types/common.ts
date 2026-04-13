@@ -2,6 +2,19 @@ import { USER_ROLE } from "@/contains/role";
 // import { SvgIconTypeMap } from "@mui/material";
 // import { OverridableComponent } from "@mui/material/OverridableComponent";
 
+// Hero Selection
+export interface TRingProps {
+  size: number; // px
+  delay: number;
+  duration: number;
+  color: string; // tailwind colour stop
+  label: string;
+  icon: React.ReactNode;
+  labelAngle?: number; // degrees at which label anchor sits (0 = right)
+  reverse?: boolean;
+}
+
+
 export type TMeta = {
   page: number;
   limit: number;
@@ -13,7 +26,7 @@ export interface TProject {
   title: string;
   description: string;
   technologies: string[];
-  category: 'Frontend' | 'Backend' | 'Database' | 'DevOps' | 'Tool' | 'Language' | 'AI'| string;
+  category: 'Frontend' | 'Backend' | 'Database' | 'DevOps' | 'Tool' | 'Language' | 'AI' | string;
   githubClient?: string;
   githubServer?: string;
   liveUrl?: string;
