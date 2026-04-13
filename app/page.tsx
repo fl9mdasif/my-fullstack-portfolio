@@ -2,6 +2,7 @@
 
 import Approach from "@/components/Approach";
 import Clients from "@/components/Clients";
+import Education from "@/components/Education";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import { AnimatedTooltipPreview } from "@/components/MyTechStack";
@@ -14,6 +15,7 @@ const Home = () => {
         <Hero />
         <div className="max-w-7xl w-full mx-auto px-5 sm:px-10">
           <Grid />
+          <Education />
           <AnimatedTooltipPreview />
           <RecentProjects />
           <Clients />
