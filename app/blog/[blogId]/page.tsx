@@ -7,8 +7,6 @@ import {
   useGetSingleBlogQuery,
   useUpdateBlogMutation,
 } from "@/redux/api/blogApi";
-import LoadingSpinner from "@/components/shared/loading";
-import { Spotlight } from "@/components/ui/Spotlight";
 import {
   IconArrowLeft,
   IconCalendar,
@@ -19,6 +17,72 @@ import {
 } from "@tabler/icons-react";
 import { cleanDescription } from "@/utils/techStackMatcher";
 import Image from "next/image";
+import NavBar from "@/components/shared/Navbar";
+
+// ─── Shimmer ──────────────────────────────────────────────────────────────────
+
+const Shimmer = ({ className }: { className?: string }) => (
+  <div
+    className={`relative overflow-hidden bg-white/5 rounded-lg before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent ${className}`}
+  />
+);
+
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
+const BlogDetailsSkeleton = () => (
+  <div className="min-h-screen bg-[#06091f]">
+    <NavBar />
+    <div className="pt-24 pb-20 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Back */}
+      <Shimmer className="h-4 w-28 mb-10 rounded-full" />
+
+      {/* Cover image */}
+      <Shimmer className="w-full aspect-video rounded-2xl mb-8" />
+
+      {/* Meta row */}
+      <div className="flex gap-4 mb-6">
+        <Shimmer className="h-4 w-28 rounded-full" />
+        <Shimmer className="h-4 w-20 rounded-full" />
+        <Shimmer className="h-4 w-16 rounded-full" />
+      </div>
+
+      {/* Title */}
+      <Shimmer className="h-9 w-full rounded-lg mb-3" />
+      <Shimmer className="h-9 w-4/5 rounded-lg mb-8" />
+
+      {/* Action buttons */}
+      <div className="flex gap-3 mb-12">
+        <Shimmer className="h-11 w-32 rounded-xl" />
+        <Shimmer className="h-11 w-24 rounded-xl" />
+        <Shimmer className="h-11 w-24 rounded-xl" />
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-white/[0.06] mb-10" />
+
+      {/* Body paragraphs */}
+      <div className="space-y-3">
+        {[...Array(12)].map((_, i) => (
+          <Shimmer
+            key={i}
+            className={`h-4 rounded ${i % 5 === 4 ? "w-2/3" : "w-full"}`}
+          />
+        ))}
+      </div>
+
+      {/* Author card */}
+      <div className="mt-12 flex items-center gap-4 border border-white/[0.07] rounded-2xl p-6 bg-white/[0.02]">
+        <Shimmer className="w-12 h-12 rounded-full" />
+        <div className="space-y-2">
+          <Shimmer className="h-4 w-24 rounded" />
+          <Shimmer className="h-3 w-36 rounded" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 const BlogDetails = () => {
   const params = useParams();
@@ -34,326 +98,241 @@ const BlogDetails = () => {
 
   const blog = blogData?.data || blogData;
 
-  // Initialize likes state when blog data is loaded
   useEffect(() => {
     if (blog) {
-      const likesCount = parseInt(blog.likes) || 0;
-      setCurrentLikes(likesCount);
-
-      // Check if user has liked this blog (stored in localStorage)
-      const likedBlogs = JSON.parse(localStorage.getItem("likedBlogs") || "{}");
-      setIsLiked(likedBlogs[blogId] || false);
-
-      // Check if user has bookmarked this blog
-      const bookmarkedBlogs = JSON.parse(localStorage.getItem("bookmarkedBlogs") || "{}");
-      setIsBookmarked(bookmarkedBlogs[blogId] || false);
+      setCurrentLikes(parseInt(blog.likes) || 0);
+      const liked = JSON.parse(localStorage.getItem("likedBlogs") || "{}");
+      setIsLiked(liked[blogId] || false);
+      const bookmarked = JSON.parse(localStorage.getItem("bookmarkedBlogs") || "{}");
+      setIsBookmarked(bookmarked[blogId] || false);
     }
   }, [blog, blogId]);
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
+  const handleLike = async () => {
+    if (!blog || isUpdating) return;
+    const newIsLiked = !isLiked;
+    const newLikes = newIsLiked ? currentLikes + 1 : currentLikes - 1;
+    setIsLiked(newIsLiked);
+    setCurrentLikes(newLikes);
+    const liked = JSON.parse(localStorage.getItem("likedBlogs") || "{}");
+    newIsLiked ? (liked[blogId] = true) : delete liked[blogId];
+    localStorage.setItem("likedBlogs", JSON.stringify(liked));
+    try {
+      await updateBlog({ id: blogId, data: { likes: newLikes.toString() } }).unwrap();
+    } catch {
+      setIsLiked(!newIsLiked);
+      setCurrentLikes(currentLikes);
+      const revert = JSON.parse(localStorage.getItem("likedBlogs") || "{}");
+      !newIsLiked ? (revert[blogId] = true) : delete revert[blogId];
+      localStorage.setItem("likedBlogs", JSON.stringify(revert));
+    }
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: blog.title, url });
+        setShareMessage("Shared!");
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareMessage("Link copied!");
+      }
+    } catch {
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareMessage("Link copied!");
+      } catch {
+        setShareMessage("Copy the URL manually.");
+      }
+    }
+    setTimeout(() => setShareMessage(""), 3000);
+  };
+
+  const handleBookmark = () => {
+    const newVal = !isBookmarked;
+    setIsBookmarked(newVal);
+    const bm = JSON.parse(localStorage.getItem("bookmarkedBlogs") || "{}");
+    newVal
+      ? (bm[blogId] = { title: blog.title, coverImage: blog.coverImage, bookmarkedAt: new Date().toISOString() })
+      : delete bm[blogId];
+    localStorage.setItem("bookmarkedBlogs", JSON.stringify(bm));
+  };
+
+  if (isLoading) return <BlogDetailsSkeleton />;
 
   if (error || !blog) {
-    console.error("Blog API Error:", error);
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-red-400 mb-4">
-            Blog Not Found
-          </h1>
-          <p className="text-gray-300 mb-4">
-            The blog youre looking for doesnt exist or has been removed.
-          </p>
-          <Link
-            href="/blog"
-            className="text-blue-400 hover:text-blue-300 transition-colors"
-          >
-            ← Back to Blogs
+      <div className="min-h-screen bg-[#06091f] flex items-center justify-center">
+        <NavBar />
+        <div className="text-center space-y-4">
+          <p className="text-5xl">📭</p>
+          <h1 className="text-3xl font-bold text-white">Blog not found</h1>
+          <p className="text-white/40 text-sm">This article may have been removed.</p>
+          <Link href="/blog" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm transition-colors">
+            <IconArrowLeft className="w-4 h-4" /> Back to Blogs
           </Link>
         </div>
       </div>
     );
   }
 
-  // Handle like button click
-  const handleLike = async () => {
-    if (!blog || isUpdating) return;
-
-    // Optimistic update
-    const newIsLiked = !isLiked;
-    const newLikes = newIsLiked ? currentLikes + 1 : currentLikes - 1;
-
-    // Update local state immediately
-    setIsLiked(newIsLiked);
-    setCurrentLikes(newLikes);
-
-    // Update localStorage
-    const likedBlogs = JSON.parse(localStorage.getItem("likedBlogs") || "{}");
-    if (newIsLiked) {
-      likedBlogs[blogId] = true;
-    } else {
-      delete likedBlogs[blogId];
-    }
-    localStorage.setItem("likedBlogs", JSON.stringify(likedBlogs));
-
-    try {
-      // Update the blog with new like count
-      await updateBlog({
-        id: blogId,
-        data: { likes: newLikes.toString() },
-      }).unwrap();
-    } catch (error) {
-      console.error("Failed to update likes:", error);
-
-      // Revert optimistic update on error
-      setIsLiked(!newIsLiked);
-      setCurrentLikes(currentLikes);
-
-      // Revert localStorage
-      const revertLikedBlogs = JSON.parse(
-        localStorage.getItem("likedBlogs") || "{}",
-      );
-      if (!newIsLiked) {
-        revertLikedBlogs[blogId] = true;
-      } else {
-        delete revertLikedBlogs[blogId];
-      }
-      localStorage.setItem("likedBlogs", JSON.stringify(revertLikedBlogs));
-    }
-  };
-
-  // Handle share button click
-  const handleShare = async () => {
-    const url = window.location.href;
-    const title = blog.title;
-    const text = `Check out this article: ${title}`;
-
-    try {
-      // Check if Web Share API is available
-      if (navigator.share) {
-        await navigator.share({
-          title: title,
-          text: text,
-          url: url,
-        });
-        setShareMessage("Shared successfully!");
-      } else {
-        // Fallback: Copy URL to clipboard
-        await navigator.clipboard.writeText(url);
-        setShareMessage("Link copied to clipboard!");
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
-      // Fallback for older browsers or if share fails
-      try {
-        await navigator.clipboard.writeText(url);
-        setShareMessage("Link copied to clipboard!");
-      } catch (clipboardError) {
-        console.error("Error copying to clipboard:", clipboardError);
-        setShareMessage("Unable to share. Please copy the URL manually.");
-      }
-    }
-
-    // Clear message after 3 seconds
-    setTimeout(() => setShareMessage(""), 3000);
-  };
-
-  // Handle bookmark button click
-  const handleBookmark = () => {
-    const newIsBookmarked = !isBookmarked;
-    setIsBookmarked(newIsBookmarked);
-
-    // Update localStorage
-    const bookmarkedBlogs = JSON.parse(localStorage.getItem("bookmarkedBlogs") || "{}");
-    if (newIsBookmarked) {
-      bookmarkedBlogs[blogId] = {
-        title: blog.title,
-        coverImage: blog.coverImage,
-        author_name: blog.author_name,
-        createdAt: blog.createdAt,
-        bookmarkedAt: new Date().toISOString(),
-      };
-    } else {
-      delete bookmarkedBlogs[blogId];
-    }
-    localStorage.setItem("bookmarkedBlogs", JSON.stringify(bookmarkedBlogs));
-  };
-
   return (
-    <div className="min-h-screen bg-[#06091f]">
-      {/* Spotlight for premium look */}
-      <div className="relative overflow-hidden">
-        <Spotlight
-          className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen"
-          fill="white"
-        />
-        <Spotlight
-          className="h-[80vh] w-[50vw] top-10 left-full"
-          fill="purple"
-        />
-        <Spotlight className="left-80 top-28 h-[80vh] w-[50vw]" fill="blue" />
-      </div>
+    <div className="min-h-screen bg-[#06091f] text-white">
+      <style>{`@keyframes shimmer { to { transform: translateX(200%); } }`}</style>
+      <NavBar />
 
-      {isLoading && <LoadingSpinner />}
+      {/* Subtle top glow */}
+      <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-64 bg-blue-600/10 rounded-full blur-3xl" />
 
-      <div className="pt-20 pb-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Back Button */}
+      <div className="relative pt-24 pb-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* ── Back ── */}
           <Link
             href="/blog"
-            className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-10 group text-sm font-medium"
           >
-            <IconArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+            <IconArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             Back to Blogs
           </Link>
 
-          {/* Hero Section */}
-          <div className="relative mb-12">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-3xl blur-3xl"></div>
-            <div className="relative rounded-3xl border border-white/[0.1] bg-black-100/50 backdrop-blur-md p-8 md:p-12">
-              {/* Blog Image */}
-              <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-700 mb-8">
-                <img
-                  src={blog.coverImage}
-                  alt={blog.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Blog Meta */}
-              <div className="flex flex-wrap items-center gap-6 mb-6">
-                <div className="flex items-center gap-2 text-gray-300">
-                  <IconCalendar className="w-5 h-5 text-blue-400" />
-                  <span className="text-sm">
-                    {new Date(blog.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-gray-300">
-                  <IconUser className="w-5 h-5 text-green-400" />
-                  <span className="text-sm">{blog.author_name}</span>
-                </div>
-
-                <div className="flex items-center gap-2 text-gray-300">
-                  <IconHeart className="w-5 h-5 text-red-400" />
-                  <span className="text-sm">{currentLikes} likes</span>
-                </div>
-              </div>
-
-              {/* Blog Title */}
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                {blog.title}
-              </h1>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
-                <button
-                  onClick={handleLike}
-                  disabled={isUpdating}
-                  className={`inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all hover:scale-105 active:scale-95 ${isLiked
-                      ? "bg-red-500/20 border border-red-500/50 text-red-500"
-                      : "bg-white/5 border border-white/[0.1] text-white hover:bg-white/10"
-                    } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
-                >
-                  <IconHeart
-                    className={`w-5 h-5 mr-2 ${isLiked ? "fill-current" : ""}`}
-                  />
-                  {isUpdating
-                    ? "Updating..."
-                    : isLiked
-                      ? "Liked"
-                      : "Like Article"}
-                </button>
-
-                <button
-                  onClick={handleShare}
-                  className="inline-flex items-center px-6 py-3 bg-white/5 border border-white/[0.1] hover:bg-white/10 text-white font-medium rounded-xl transition-all hover:scale-105 relative"
-                >
-                  <IconShare className="w-5 h-5 mr-2" />
-                  Share
-                  {shareMessage && (
-                    <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg z-50 animate-bounce">
-                      {shareMessage}
-                    </span>
-                  )}
-                </button>
-
-                <button
-                  onClick={handleBookmark}
-                  className={`inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all hover:scale-105 ${isBookmarked
-                      ? "bg-blue-500/20 border border-blue-500/50 text-blue-500"
-                      : "bg-white/5 border border-white/[0.1] text-white hover:bg-white/10"
-                    }`}
-                >
-                  <IconBookmark
-                    className={`w-5 h-5 mr-2 ${isBookmarked ? "fill-current" : ""}`}
-                  />
-                  {isBookmarked ? "Saved" : "Save"}
-                </button>
-              </div>
-            </div>
+          {/* ── Cover Image ── */}
+          <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/[0.07] mb-10 bg-white/5">
+            <img
+              src={blog.coverImage}
+              alt={blog.title}
+              className="w-full h-full object-cover"
+            />
+            {/* gradient overlay at bottom */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#06091f]/60 via-transparent to-transparent" />
           </div>
 
-          {/* Blog Content */}
-          <div className="relative rounded-3xl border border-white/[0.1] bg-black-100/50 backdrop-blur-md p-8 md:p-12 mb-12">
-            <div className="prose prose-lg prose-invert max-w-none 
-              prose-headings:text-white prose-headings:font-bold prose-headings:mb-4
-              prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
-              prose-strong:text-white prose-strong:font-semibold
-              prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-6
-              prose-ol:list-decimal prose-ol:ml-6 prose-ol:mb-6
-              prose-li:text-gray-300 prose-li:mb-2
-              prose-hr:border-white/[0.1] prose-hr:my-10">
-              <div className="whitespace-pre-line">
-                {cleanDescription(blog.description)}
-              </div>
-            </div>
+          {/* ── Meta Row ── */}
+          <div className="flex flex-wrap items-center gap-5 mb-5 text-sm text-white/40">
+            <span className="flex items-center gap-1.5">
+              <IconCalendar className="w-4 h-4 text-blue-400" />
+              {new Date(blog.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <IconUser className="w-4 h-4 text-emerald-400" />
+              {blog.author_name || "dev_asif"}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <IconHeart className="w-4 h-4 text-red-400" />
+              {currentLikes} likes
+            </span>
           </div>
 
-          {/* Author Section */}
-          <div className="bg-black-100/50 backdrop-blur-md border border-white/[0.1] rounded-3xl p-8">
-            <div className="flex gap-2 items-center ">
-              {/* <IconUser className="w-4 h-4 text-gray-300" /> */}
-              {/* <div className="w-8 mr-1 rounded-full"> */}
-              <Image
-                src="https://avatars.githubusercontent.com/u/73554861?v=4"
-                width={100}
-                height={100}
-                alt="author image"
-                className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center"
-              />
-              <span className="text-gray-300 text-sm font-medium">
-                <span>
-                  <a href="https://www.linkedin.com/in/fl9mdasif/">dev_asif</a>
+          {/* ── Title ── */}
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-8">
+            {blog.title}
+          </h1>
+
+          {/* ── Action Buttons ── */}
+          <div className="flex flex-wrap gap-3 mb-10">
+            <button
+              onClick={handleLike}
+              disabled={isUpdating}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl border transition-all hover:scale-[1.02] active:scale-95 ${
+                isLiked
+                  ? "bg-red-500/10 border-red-500/30 text-red-400"
+                  : "bg-white/[0.04] border-white/10 text-white/70 hover:bg-white/[0.08]"
+              } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+              <IconHeart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
+              {isUpdating ? "Updating…" : isLiked ? "Liked" : "Like"}
+            </button>
+
+            <button
+              onClick={handleShare}
+              className="relative inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl border bg-white/[0.04] border-white/10 text-white/70 hover:bg-white/[0.08] transition-all hover:scale-[1.02]"
+            >
+              <IconShare className="w-4 h-4" />
+              Share
+              {shareMessage && (
+                <span className="absolute -top-9 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg whitespace-nowrap">
+                  {shareMessage}
                 </span>
-              </span>
+              )}
+            </button>
+
+            <button
+              onClick={handleBookmark}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl border transition-all hover:scale-[1.02] ${
+                isBookmarked
+                  ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                  : "bg-white/[0.04] border-white/10 text-white/70 hover:bg-white/[0.08]"
+              }`}
+            >
+              <IconBookmark className={`w-4 h-4 ${isBookmarked ? "fill-current" : ""}`} />
+              {isBookmarked ? "Saved" : "Save"}
+            </button>
+          </div>
+
+          {/* ── Divider ── */}
+          <div className="border-t border-white/[0.06] mb-10" />
+
+          {/* ── Body ── */}
+          <div
+            className="
+              prose prose-invert max-w-none
+              prose-p:text-white/60 prose-p:leading-[1.9] prose-p:text-base
+              prose-h1:text-white prose-h1:font-bold prose-h1:text-3xl prose-h1:mt-10 prose-h1:mb-4
+              prose-h2:text-white prose-h2:font-semibold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-3
+              prose-h3:text-white/90 prose-h3:font-semibold prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-2
+              prose-strong:text-white prose-strong:font-semibold
+              prose-code:text-blue-300 prose-code:bg-blue-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+              prose-pre:bg-white/[0.04] prose-pre:border prose-pre:border-white/[0.07] prose-pre:rounded-xl
+              prose-blockquote:border-l-blue-500 prose-blockquote:text-white/50 prose-blockquote:bg-white/[0.02] prose-blockquote:rounded-r-lg prose-blockquote:py-1
+              prose-ul:text-white/60 prose-ol:text-white/60
+              prose-li:marker:text-blue-400
+              prose-hr:border-white/[0.06]
+              prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+            "
+          >
+            <div className="whitespace-pre-line">
+              {cleanDescription(blog.description)}
             </div>
           </div>
 
-          {/* Related Blogs Section (Placeholder) */}
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold text-white mb-6">
-              Related Articles
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* This would be populated with related blogs */}
-              {/* <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-6">
-                <div className="text-gray-400 text-center">
-                  Related articles would appear here
-                </div>
-              </div>
-              <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-6">
-                <div className="text-gray-400 text-center">
-                  Related articles would appear here
-                </div>
-              </div> */}
+          {/* ── Divider ── */}
+          <div className="border-t border-white/[0.06] mt-12 mb-10" />
+
+          {/* ── Author Card ── */}
+          <div className="flex items-center gap-4 p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02]">
+            <Image
+              src="https://avatars.githubusercontent.com/u/73554861?v=4"
+              width={48}
+              height={48}
+              alt="author"
+              className="w-12 h-12 rounded-full ring-2 ring-blue-500/30"
+            />
+            <div>
+              <a
+                href="https://www.linkedin.com/in/fl9mdasif/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white font-semibold text-sm hover:text-blue-400 transition-colors"
+              >
+                dev_asif
+              </a>
+              <p className="text-white/40 text-xs mt-0.5">Full Stack Developer · MERN / Next.js</p>
             </div>
+            <a
+              href="https://www.linkedin.com/in/fl9mdasif/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto text-xs text-blue-400 border border-blue-500/30 px-4 py-1.5 rounded-full hover:bg-blue-500/10 transition-colors"
+            >
+              Follow
+            </a>
           </div>
+
         </div>
       </div>
     </div>

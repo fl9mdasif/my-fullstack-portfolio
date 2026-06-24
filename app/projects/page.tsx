@@ -6,8 +6,8 @@ import React from "react";
 const Projects = () => {
   const { data: projectsData, refetch, isLoading } = useGetAllProjectsQuery({});
 
-  const projectsList = projectsData?.data || [];
-  // console.log("dummy data", projects);
+  const projectsList = projectsData || [];
+  // console.log("projects data", projectsData);
   // console.log("fetch project", projectsList);
 
   return (
