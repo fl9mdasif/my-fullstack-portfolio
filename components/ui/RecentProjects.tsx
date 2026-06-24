@@ -39,7 +39,8 @@ const ProjectSkeleton = () => (
 const RecentProjects = () => {
   const { data: projectsData, isLoading } = useGetAllProjectsQuery({});
 
-  const projectsList = (projectsData || []).slice(-4);
+  const projectsList = (projectsData || []).slice(0,4);
+
 
   return (
     <div id="recentProjects" className="py-20">

@@ -5,7 +5,7 @@ import Clients from "@/components/Clients";
 import Education from "@/components/Education";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
-import { AnimatedTooltipPreview } from "@/components/MyTechStack";
+import { Skills } from "@/components/MyTechStack";
 import RecentProjects from "@/components/ui/RecentProjects";
 
 const Home = () => {
@@ -16,7 +16,7 @@ const Home = () => {
         <div className="max-w-7xl w-full mx-auto px-5 sm:px-10">
           <Grid />
           <Education />
-          <AnimatedTooltipPreview />
+          <Skills />
           <RecentProjects />
           <Clients />
           <Approach />
