@@ -30,7 +30,13 @@ export const matchTechStack = (projectTech: string): { iconURL: string; name: st
     redux: ["reduxtoolkit", "redux-toolkit"],
     prisma: ["prismaorm"],
     postgresql: ["postgres"],
-  };
+    shadcn: ["shadcnui", "shadcn-ui", "shadcn/ui"],
+    radix: ["radixui", "radix-ui"],
+    antdesign: ["antd", "ant-design"],
+    materialui: ["mui", "material-ui"],
+    daisyui: ["daisy"],
+};
+
 
   for (const tech of allTechItems) {
     const normalizedTechName = tech.name
