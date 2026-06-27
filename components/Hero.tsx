@@ -258,7 +258,7 @@ const Hero: React.FC = () => {
             </a>
 
             <a
-              href="https://drive.google.com/file/d/1W6ITHXW-LvLLawbHq4aPmAKViyP6zRSf/view?usp=drive_link"
+              href="https://drive.google.com/file/d/1i646oIYPByDGPNfZFZ31iFBu3i6Z5WtN/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
             >
