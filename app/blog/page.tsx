@@ -52,7 +52,9 @@ const BlogCardSkeleton = () => (
 const BlogsPage = () => {
   const { data: blogsData, isLoading } = useGetAllBlogsQuery(undefined);
 
-  const blogs = blogsData || blogsData || [];
+  const blogs = blogsData|| [];
+
+  // console.log('blogs',blogsData.data )
 
   const [likedBlogs, setLikedBlogs] = useState<Record<string, boolean>>({});
 

@@ -8,17 +8,28 @@ import { HiSparkles } from "react-icons/hi2";
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const COURSES = [
+    
     {
-        title: "Complete Web Development (MERN)",
-        org: "Programming Hero",
+        id:1,
+        title: "bKash Limited Vetted Professional (Top 5%)",
+        org: "Pro5.ai",
         status: "Completed",
-        certificaateLink: "https://i.ibb.co/2dVhHJN/PG-hero.png"
+        certificaateLink: "https://i.ibb.co.com/d08Nd1Yt/image.png"
     },
     {
+        id:2,
         title: "Next Level Web Development",
         org: "Programming Hero",
         status: "Completed",
         certificaateLink: "https://web.programming-hero.com/verification?validationNumber=PHlevel2-batch2-fullstackL2B2-04121040"
+    
+    },
+    {
+        id:3,
+        title: "Complete Web Development (MERN)",
+        org: "Programming Hero",
+        status: "Completed",
+        certificaateLink: "https://i.ibb.co/2dVhHJN/PG-hero.png"
     },
 
 
