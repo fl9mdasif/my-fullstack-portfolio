@@ -25,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
   { name: "Work", link: "/#work", section: "work" },
   { name: "Process", link: "/#process", section: "process" },
   { name: "Skills", link: "/#skills", section: "skills" },
-  { name: "Projects", link: "/projects" },
+  // { name: "Projects", link: "/projects" },
   { name: "Blog", link: "/blog" },
 ];
 

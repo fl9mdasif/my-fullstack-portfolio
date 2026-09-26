@@ -28,19 +28,19 @@ const Home = () => {
           <Grid />
         </div>
 
+        <div className="max-w-7xl w-full mx-auto px-5 sm:px-10">
+          <Skills /> 
+        </div>
+        
         <ServicesSection />
 
         {/* The deck sits outside every wrapper so no ancestor can break sticky. */}
         <ProjectStackSection />
 
-       
-
         <Pipeline />
 
         <div className="max-w-7xl w-full mx-auto px-5 sm:px-10">
-          <Skills />
           <Education />
-      
         </div>
       
        <div className="max-w-7xl w-full mx-auto px-5 sm:px-10">

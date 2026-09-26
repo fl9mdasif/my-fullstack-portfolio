@@ -244,7 +244,7 @@ const Hero: React.FC = () => {
             variants={fadeUpVariants}
             className="flex flex-wrap gap-3 justify-center lg:justify-start mt-1"
           >
-            <a href="/#recentProjects">
+            <a href="/#work">
               <Button
                 borderRadius="0.75rem"
                 duration={3000}
