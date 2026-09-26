@@ -42,6 +42,7 @@ export function ProjectStack({ items }: { items: TPortfolioItem[] }) {
                       ))}
                     </ul>
                   )}
+                  <p className="stack-desc">{item.description}</p>
                   <Link href={`/projects/${item.slug}`} className="stack-link">
                     View case study
                     <Icon name="arrow" strokeWidth={2} />
@@ -61,8 +62,6 @@ export function ProjectStack({ items }: { items: TPortfolioItem[] }) {
                     ) : null}
                   </div>
                 </div>
-
-                <p className="stack-desc">{item.description}</p>
               </article>
             </li>
           );

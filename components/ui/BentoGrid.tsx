@@ -55,8 +55,8 @@ export const BentoGridItem = ({
   spareImg?: string;
   index?: number;
 }) => {
-  const leftLists = ["TYPESCRIPT", "MERN", "NEXT", "CI/CD"];
-  const rightLists = ["AWS", "AI", "N8N", "SaaS"];
+  const leftLists = [ "FULL STACK", "TYPESCRIPT", "PYTHON", "DJANGO" ];
+  const rightLists = ["AWS", "AI", "SAAS", "RAG"];
 
   const [copied, setCopied] = useState(false);
 
@@ -152,27 +152,25 @@ export const BentoGridItem = ({
 
           {/* Tech stack list div */}
           {id === 3 && (
-            <div className="flex gap-1 lg:gap-3 w-fit absolute right-1 lg:-right-1">
-              {/* tech stack lists */}
-              <div className="flex flex-col gap-3 md:gap-1 lg:gap-3">
-                {leftLists.map((item, i) => (
+            // Both columns hold 4 items, so the boxes stay small enough to fit
+            // the tile at every size. The offset on the right column keeps the
+            // staggered look that the empty spacer spans used to give.
+            <div className="absolute right-2 top-1/2 flex w-fit -translate-y-1/2 gap-1.5 lg:right-3 lg:gap-2">
+              <div className="flex flex-col gap-1.5 lg:gap-2">
+                {leftLists.map((item) => (
                   <span
-                    key={i}
-                    className="lg:py-4 lg:px-1 py-2 px-1 text-xs lg:text-base opacity-50 
-                    lg:opacity-100 rounded-lg text-center bg-[#10132E]"
+                    key={item}
+                    className="rounded-lg bg-[#10132E] px-2 py-1.5 text-center text-[10px] opacity-70 lg:px-2.5 lg:py-2 lg:text-xs lg:opacity-100"
                   >
                     {item}
                   </span>
                 ))}
-                <span className="lg:py-3 lg:px-3 py-3 px-3  rounded-lg text-center bg-[#10132E]"></span>
               </div>
-              <div className="flex flex-col gap-3 md:gap-3 lg:gap-3">
-                <span className="lg:py-4 lg:px-3 py-4 px-3  rounded-lg text-center bg-[#10132E]"></span>
-                {rightLists.map((item, i) => (
+              <div className="mt-4 flex flex-col gap-1.5 lg:mt-6 lg:gap-2">
+                {rightLists.map((item) => (
                   <span
-                    key={i}
-                    className="lg:py-4 lg:px-3 py-2 px-3 text-xs lg:text-base opacity-50 
-                    lg:opacity-100 rounded-lg text-center bg-[#10132E]"
+                    key={item}
+                    className="rounded-lg bg-[#10132E] px-2 py-1.5 text-center text-[10px] opacity-70 lg:px-2.5 lg:py-2 lg:text-xs lg:opacity-100"
                   >
                     {item}
                   </span>

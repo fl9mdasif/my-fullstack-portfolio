@@ -303,7 +303,9 @@ import {
   IconCode,
   IconEye,
 } from "@tabler/icons-react";
-import { getTechStackIcons, cleanDescription } from "@/utils/techStackMatcher";
+import { getTechStackIcons } from "@/utils/techStackMatcher";
+import { htmlToText } from "@/utils/richText";
+import { RichText } from "@/components/ui/RichText";
 import NavBar from "@/components/shared/Navbar";
 
 // ─── Skeleton Components ───────────────────────────────────────────────────────
@@ -526,9 +528,10 @@ const ProjectDetails = () => {
                       {project.title}
                     </h1>
 
-                    {/* Short description */}
+                    {/* Short description — flattened, since the editor stores
+                        HTML and this slot is a clamped one-liner. */}
                     <p className="text-white/50 text-sm leading-relaxed line-clamp-4">
-                      {cleanDescription(project.description)}
+                      {htmlToText(project.description)}
                     </p>
                   </div>
 
@@ -586,9 +589,7 @@ const ProjectDetails = () => {
                   <span className="w-1 h-5 bg-purple-500 rounded-full inline-block" />
                   About This Project
                 </h2>
-                <p className="text-white/60 leading-relaxed text-sm">
-                  {cleanDescription(project.description)}
-                </p>
+                <RichText content={project.description} className="prose-sm" />
               </div>
 
               {/* Gallery */}

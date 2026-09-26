@@ -168,12 +168,42 @@
   grid-column: span 2;
 }
 
+/* Soft round glow that follows the cursor. Motion.tsx writes --mx / --my;
+   without it the glow still works, centred near the top of the card. */
+.svc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 20%),
+    rgba(203, 172, 249, 0.16),
+    rgba(56, 189, 248, 0.07) 42%,
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+  pointer-events: none;
+}
+
+.svc:hover::after,
+.svc:focus-visible::after {
+  opacity: 1;
+}
+
+/* Content rides above the glow layer. */
+.svc > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Hairline that sweeps the top edge on hover. */
 .svc::before {
   content: "";
   position: absolute;
   inset: 0 0 auto;
   height: 1px;
+  z-index: 2;
   background: linear-gradient(90deg, transparent, var(--violet), var(--acid), transparent);
   opacity: 0;
   transform: translateX(-100%);
@@ -511,14 +541,11 @@
   filter: brightness(var(--stack-b, 1));
 }
 
-/* 2 columns x 2 rows:
-   row 1 (90%) = info column (24%) + image (76%)
-   row 2 (10%) = short description, full width
-   The fixed height is what makes those percentages mean anything. */
+/* Two columns: info column holds name, tech, description and button; the
+   image fills the wide column at full card height. */
 .stack-card {
   display: grid;
-  grid-template-columns: 24% minmax(0, 1fr);
-  grid-template-rows: minmax(0, 9fr) minmax(58px, 1fr);
+  grid-template-columns: 30% minmax(0, 1fr);
   height: clamp(460px, 60vh, 580px);
   overflow: hidden;
   border: 1px solid var(--line);
@@ -527,12 +554,15 @@
   box-shadow: 0 30px 70px -50px rgba(0, 0, 0, 0.9);
 }
 
+/* Content groups from the top; nothing is stretched to the card bottom, so
+   the whole block stays clear of the card that slides over it. */
 .stack-body {
   grid-column: 1;
   grid-row: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
   min-width: 0;
   padding: var(--sp-4) var(--sp-3);
   border-right: 1px solid var(--line);
@@ -561,19 +591,16 @@
   color: var(--text);
 }
 
-/* The thin bottom row. Two lines maximum so the 10% band never overflows. */
+/* Sits under the tech tags inside the info column, clamped so every card in
+   the deck keeps the same height. */
 .stack-desc {
-  grid-column: 1 / -1;
-  grid-row: 2;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   overflow: hidden;
   margin: 0;
-  padding: 12px var(--sp-3) 0;
-  border-top: 1px solid var(--line);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--text-mid);
 }
 
@@ -595,11 +622,14 @@
   color: var(--text-mid);
 }
 
+/* Sits right under the description. It used to be pushed to the bottom with
+   `margin-top: auto`, where the next sticky card covered it mid-scroll. */
 .stack-link {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   gap: 8px;
-  margin-top: auto;
+  margin-top: 4px;
   font-size: 13.5px;
   font-weight: 600;
   color: var(--accent);
@@ -664,10 +694,10 @@
     top: calc(88px + var(--i) * 10px);
   }
 
-  /* One column, image first, then the info block, then the description. */
+  /* One column: image first, then the whole info block. */
   .stack-card {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     height: auto;
   }
 
@@ -686,9 +716,7 @@
   }
 
   .stack-desc {
-    grid-row: 3;
     -webkit-line-clamp: 3;
-    padding: 12px var(--sp-3) var(--sp-3);
   }
 }
 
@@ -740,6 +768,7 @@
   }
 
   .svc::before,
+  .svc::after,
   .svc-more svg,
   .stack-link svg,
   .sk {

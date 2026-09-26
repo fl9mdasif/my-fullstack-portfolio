@@ -15,7 +15,7 @@ import {
   IconShare,
   IconBookmark,
 } from "@tabler/icons-react";
-import { cleanDescription } from "@/utils/techStackMatcher";
+import { RichText } from "@/components/ui/RichText";
 import Image from "next/image";
 import NavBar from "@/components/shared/Navbar";
 
@@ -278,27 +278,8 @@ const BlogDetails = () => {
           <div className="border-t border-white/[0.06] mb-10" />
 
           {/* ── Body ── */}
-          <div
-            className="
-              prose prose-invert max-w-none
-              prose-p:text-white/60 prose-p:leading-[1.9] prose-p:text-base
-              prose-h1:text-white prose-h1:font-bold prose-h1:text-3xl prose-h1:mt-10 prose-h1:mb-4
-              prose-h2:text-white prose-h2:font-semibold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-3
-              prose-h3:text-white/90 prose-h3:font-semibold prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-2
-              prose-strong:text-white prose-strong:font-semibold
-              prose-code:text-blue-300 prose-code:bg-blue-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
-              prose-pre:bg-white/[0.04] prose-pre:border prose-pre:border-white/[0.07] prose-pre:rounded-xl
-              prose-blockquote:border-l-blue-500 prose-blockquote:text-white/50 prose-blockquote:bg-white/[0.02] prose-blockquote:rounded-r-lg prose-blockquote:py-1
-              prose-ul:text-white/60 prose-ol:text-white/60
-              prose-li:marker:text-blue-400
-              prose-hr:border-white/[0.06]
-              prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
-            "
-          >
-            <div className="whitespace-pre-line">
-              {cleanDescription(blog.description)}
-            </div>
-          </div>
+          {/* Editor HTML, or preserved line breaks for pre-editor records. */}
+          <RichText content={blog.description} />
 
           {/* ── Divider ── */}
           <div className="border-t border-white/[0.06] mt-12 mb-10" />

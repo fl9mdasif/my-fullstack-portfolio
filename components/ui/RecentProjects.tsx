@@ -7,7 +7,8 @@ import Link from "next/link";
 import MagicButton from "./MagicButton";
 import { useGetAllProjectsQuery } from "@/redux/api/projectApi";
 import { TProject } from "@/types/common";
-import { getTechStackIcons, cleanDescription } from "@/utils/techStackMatcher";
+import { getTechStackIcons } from "@/utils/techStackMatcher";
+import { htmlToText } from "@/utils/richText";
 
 // Skeleton Card Component
 const ProjectSkeleton = () => (
@@ -83,7 +84,7 @@ const RecentProjects = () => {
                     className="lg:text-lg lg:font-normal font-light text-sm line-clamp-2"
                     style={{ color: "#BEC1DD", margin: "1vh 0" }}
                   >
-                    {cleanDescription(project.description)}
+                    {htmlToText(project.description)}
                   </p>
 
                   <div className="flex flex-col items-start justify-center mt-7 mb-3">

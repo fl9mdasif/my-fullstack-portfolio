@@ -1,5 +1,6 @@
 import type { TPortfolioItem } from "@/types/sections";
 import type { TProject } from "@/types/common";
+import { htmlToText } from "@/utils/richText";
 
 /** Category may arrive as a string, an object, or nothing at all. */
 export function categoryName(
@@ -22,7 +23,8 @@ export function toPortfolioItem(p: TProject, i: number): TPortfolioItem {
     _id: p._id || `${slugify(p.title)}-${i}`,
     title: p.title,
     slug: p._id || slugify(p.title),
-    description: p.description,
+    // The deck card is a clamped excerpt, so editor HTML is flattened here.
+    description: htmlToText(p.description),
     techStack: p.technologies ?? [],
     thumbnail: p.image ?? "",
     category: p.category ?? null,

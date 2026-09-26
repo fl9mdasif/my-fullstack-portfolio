@@ -131,6 +131,12 @@ function setupServiceHover(grid: HTMLElement) {
       const r = card.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width - 0.5;
       const py = (e.clientY - r.top) / r.height - 0.5;
+
+      // Position of the radial glow behind the content. Written straight to
+      // the element — a tween per pointermove would be wasted work.
+      card.style.setProperty("--mx", `${((px + 0.5) * 100).toFixed(2)}%`);
+      card.style.setProperty("--my", `${((py + 0.5) * 100).toFixed(2)}%`);
+
       gsap.to(card, {
         rotationY: px * 6,
         rotationX: -py * 6,
@@ -141,6 +147,8 @@ function setupServiceHover(grid: HTMLElement) {
       });
     };
     const leave = () => {
+      card.style.removeProperty("--mx");
+      card.style.removeProperty("--my");
       gsap.to(card, {
         rotationY: 0,
         rotationX: 0,

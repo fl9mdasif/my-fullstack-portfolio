@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { IconCalendar, IconHeart } from "@tabler/icons-react";
-import { cleanDescription } from "@/utils/techStackMatcher";
+import { htmlToText } from "@/utils/richText";
 
 // ─── Shimmer ──────────────────────────────────────────────────────────────────
 
@@ -125,7 +125,7 @@ const BlogsPage = () => {
                         </h2>
 
                         <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
-                          {cleanDescription(blog.description)}
+                          {htmlToText(blog.description)}
                         </p>
 
                         {/* Author + Likes */}

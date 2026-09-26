@@ -17,11 +17,10 @@ const StackSkeleton = () => (
             <span className="sk sk-cat" />
             <span className="sk sk-title" />
             <span className="sk sk-tags" />
+            <span className="sk sk-line" />
+            <span className="sk sk-line short" />
           </div>
           <div className="stack-vis w1" />
-          <p className="stack-desc">
-            <span className="sk sk-line" />
-          </p>
         </div>
       </li>
     ))}
