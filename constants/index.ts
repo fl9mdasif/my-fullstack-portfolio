@@ -12,7 +12,7 @@ export const myTechStacksByCategory = [
     category: "Frontend",
     color: "from-cyan-500/20 to-teal-500/20 border-cyan-500/30",
     items: [
-      { id: 4, name: "React.js", iconURL: "https://cdn.worldvectorlogo.com/logos/react-2.svg" },
+      { id: 4, name: "React.js", iconURL: "https://cdn.worldvectorlogo.com/logos/react-1.svg" },
       { id: 5, name: "Next.js", iconURL: "https://cdn.worldvectorlogo.com/logos/next-js.svg" },
       { id: 6, name: "Redux", iconURL: "https://cdn.worldvectorlogo.com/logos/redux.svg" },
       { id: 7, name: "Tailwind CSS", iconURL: "https://cdn.worldvectorlogo.com/logos/tailwindcss.svg" },
@@ -62,7 +62,8 @@ export const myTechStacksByCategory = [
     color: "from-green-500/20 to-emerald-500/20 border-green-500/30",
     items: [
       { id: 8, name: "Node.js", iconURL: "https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" },
-      { id: 9, name: "Express.js", iconURL: "https://cdn.worldvectorlogo.com/logos/express-109.svg" },
+      { id: 9, name: "Express.js", iconURL: "https://cdn.worldvectorlogo.com/logos/express.svg" },
+      { id: 10, name: "Django", iconURL: "https://cdn.worldvectorlogo.com/logos/django.svg" },
     ],
   },
   {
@@ -71,7 +72,7 @@ export const myTechStacksByCategory = [
     items: [
       { id: 10, name: "MongoDB", iconURL: "https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" },
       { id: 11, name: "Mongoose", iconURL: "https://cdn.worldvectorlogo.com/logos/mongoose-1.svg" },
-      { id: 12, name: "PostgreSQL", iconURL: "https://cdn.worldvectorlogo.com/logos/postgresql.svg" },
+      { id: 12, name: "PostgreSQL", iconURL: "https://cdn.worldvectorlogo.com/logos/postgresql-3.svg" },
       { id: 13, name: "Prisma", iconURL: "https://cdn.worldvectorlogo.com/logos/prisma-4.svg" },
       { id: 14, name: "Firebase", iconURL: "https://cdn.worldvectorlogo.com/logos/firebase-1.svg" },
       { id: 15, name: "MySQL", iconURL: "https://cdn.worldvectorlogo.com/logos/mysql-3.svg" },
