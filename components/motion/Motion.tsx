@@ -132,11 +132,6 @@ function setupServiceHover(grid: HTMLElement) {
       const px = (e.clientX - r.left) / r.width - 0.5;
       const py = (e.clientY - r.top) / r.height - 0.5;
 
-      // Position of the radial glow behind the content. Written straight to
-      // the element — a tween per pointermove would be wasted work.
-      card.style.setProperty("--mx", `${((px + 0.5) * 100).toFixed(2)}%`);
-      card.style.setProperty("--my", `${((py + 0.5) * 100).toFixed(2)}%`);
-
       gsap.to(card, {
         rotationY: px * 6,
         rotationX: -py * 6,
@@ -147,8 +142,6 @@ function setupServiceHover(grid: HTMLElement) {
       });
     };
     const leave = () => {
-      card.style.removeProperty("--mx");
-      card.style.removeProperty("--my");
       gsap.to(card, {
         rotationY: 0,
         rotationX: 0,
@@ -171,12 +164,17 @@ function setupServiceHover(grid: HTMLElement) {
 
 /* ---------- process: vertical spine ---------- */
 
-function setupSpine(wrap: HTMLElement) {
+/**
+ * `stacked` is the <=767px layout: one column with the spine on the left, so
+ * every card slides in from the same side instead of alternating.
+ */
+function setupSpine(wrap: HTMLElement, stacked: boolean) {
   const fill = wrap.querySelector<HTMLElement>("#spine-fill");
+  const list = wrap.querySelector<HTMLElement>(".steps");
   const steps = Array.from(wrap.querySelectorAll<HTMLElement>(".step"));
   if (!steps.length) return;
 
-  if (fill) {
+  if (fill && list) {
     gsap.fromTo(
       fill,
       { scaleY: 0 },
@@ -184,10 +182,10 @@ function setupSpine(wrap: HTMLElement) {
         scaleY: 1,
         ease: "none",
         scrollTrigger: {
-          trigger: wrap,
-          start: "top 70%",
-          end: "bottom 60%",
-          scrub: 0.5,
+          trigger: list,
+          start: "top 75%",
+          end: "bottom 84%",
+          scrub: 0.8,
           invalidateOnRefresh: true,
         },
       }
@@ -199,39 +197,77 @@ function setupSpine(wrap: HTMLElement) {
     const node = step.querySelector<HTMLElement>(".step-node");
     const motion = step.querySelector<HTMLElement>(".step-motion");
     const inner = step.querySelectorAll<HTMLElement>(
-      ".step-top, .step-title, .step-desc, .step-bar-row"
+      ".step-num, .step-ico, .step-title, .step-desc"
     );
     const bar = step.querySelector<HTMLElement>(".step-bar i");
-    const fromLeft = step.classList.contains("is-left");
+    const dx = stacked || step.classList.contains("is-right") ? -40 : 40;
 
+    // Replays in reverse when scrolling back up.
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: step, start: "top 84%" },
+      scrollTrigger: {
+        trigger: step,
+        start: "top 84%",
+        toggleActions: "play none none reverse",
+      },
     });
 
-    if (stub) tl.from(stub, { scaleX: 0, duration: 0.35, ease: EASE }, 0);
+    if (stub) tl.from(stub, { scaleX: 0, duration: 0.35, ease: "power2.out" });
     if (node)
-      tl.from(node, { scale: 0, duration: 0.45, ease: "back.out(2)" }, 0.1);
+      tl.from(node, {
+        scale: 0,
+        duration: 0.4,
+        ease: "back.out(2)",
+        clearProps: "scale",
+      });
     if (motion)
       tl.from(
         motion,
-        { x: fromLeft ? 40 : -40, opacity: 0, duration: 0.6, ease: EASE },
-        0.15
+        { opacity: 0, scale: 0.96, x: dx, duration: 0.65, ease: EASE },
+        "-=0.15"
       );
-    tl.from(
-      inner,
-      { y: 12, opacity: 0, duration: 0.4, stagger: 0.07, ease: EASE },
-      0.3
-    );
-    if (bar) tl.from(bar, { scaleX: 0, duration: 0.7, ease: "power2.out" }, 0.5);
-
-    // The step nearest the viewport centre is the active one.
-    ScrollTrigger.create({
-      trigger: step,
-      start: "top 60%",
-      end: "bottom 40%",
-      onToggle: (self) => step.classList.toggle("active", self.isActive),
-    });
+    if (inner.length)
+      tl.from(
+        inner,
+        { opacity: 0, y: 8, duration: 0.35, stagger: 0.05, ease: "power2.out" },
+        "-=0.3"
+      );
+    if (bar)
+      tl.from(bar, { scaleX: 0, duration: 0.6, ease: "power2.out" }, "+=0.15");
   });
+
+  // Active step = the one whose centre is nearest the viewport centre.
+  let current: HTMLElement | null = null;
+  const setActive = (el: HTMLElement | null) => {
+    if (el === current) return;
+    current?.classList.remove("active");
+    el?.classList.add("active");
+    current = el;
+  };
+
+  const pick = () => {
+    const mid = window.innerHeight / 2;
+    let best: HTMLElement | null = null;
+    let bestDist = Infinity;
+    for (const step of steps) {
+      const r = step.getBoundingClientRect();
+      const dist = Math.abs(r.top + r.height / 2 - mid);
+      if (dist < bestDist && r.bottom > 0 && r.top < window.innerHeight) {
+        best = step;
+        bestDist = dist;
+      }
+    }
+    setActive(best);
+  };
+
+  ScrollTrigger.create({
+    trigger: list ?? wrap,
+    start: "top 60%",
+    end: "bottom 40%",
+    onUpdate: pick,
+    onToggle: (self) => (self.isActive ? pick() : setActive(null)),
+  });
+
+  return () => setActive(null);
 }
 
 /* ---------- project stack ---------- */
@@ -329,6 +365,21 @@ export function Motion() {
     return () => window.removeEventListener(MOTION_REFRESH, onRefresh);
   }, []);
 
+  // Cursor spotlight for every [data-spot] element (service cards, process
+  // cards). One passive listener writes the pointer position in px; the CSS
+  // `::after` glow reads --mx / --my. No tween per event.
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      const el = (e.target as Element | null)?.closest<HTMLElement>("[data-spot]");
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      el.style.setProperty("--my", `${e.clientY - r.top}px`);
+    };
+    document.addEventListener("pointermove", onMove, { passive: true });
+    return () => document.removeEventListener("pointermove", onMove);
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -390,8 +441,25 @@ export function Motion() {
         return () => cleanup?.();
       });
 
-      const spine = document.querySelector<HTMLElement>("#spine");
-      if (spine) guard("spine", () => setupSpine(spine));
+      mm.add("(min-width: 768px)", () => {
+        const spine = document.querySelector<HTMLElement>("#spine");
+        if (!spine) return;
+        let cleanup: (() => void) | undefined;
+        guard("spine (desktop)", () => {
+          cleanup = setupSpine(spine, false);
+        });
+        return () => cleanup?.();
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        const spine = document.querySelector<HTMLElement>("#spine");
+        if (!spine) return;
+        let cleanup: (() => void) | undefined;
+        guard("spine (mobile)", () => {
+          cleanup = setupSpine(spine, true);
+        });
+        return () => cleanup?.();
+      });
 
       mm.add("(min-width: 768px)", () => {
         const stack = document.querySelector<HTMLElement>("#stack");

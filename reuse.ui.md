@@ -211,9 +211,9 @@ Three things happen at once.
 .svc:focus-visible::after { opacity: 1; }
 ```
 
-`--mx` / `--my` are written by `Motion.tsx` on `pointermove` — straight through
-`style.setProperty`, **not** a tween, since a tween per pointer event is wasted
-work. The defaults (`50% 20%`) mean the glow still works on plain CSS hover if
+`--mx` / `--my` are written in px by the global `[data-spot]` listener (§8, rule
+5) — straight through `style.setProperty`, **not** a tween, since a tween per
+pointer event is wasted work. The defaults (`50% 20%`) mean the glow still works on plain CSS hover if
 the motion layer never runs.
 
 **2. Gradient hairline sweeping the top edge** (`::before`): a 1px
@@ -229,8 +229,7 @@ y: -6,                  // 6px lift
 duration: .4, ease: "power2.out", overwrite: "auto"
 ```
 
-Reset on `pointerleave` (`.5s`), and `--mx` / `--my` are removed so the glow
-returns to its default spot. The whole hover block is inside
+Reset on `pointerleave` (`.5s`). The whole hover block is inside
 `mm.add("(hover: hover) and (pointer: fine)")`, so touch devices never get it.
 
 Plus: border goes `--line → --line-strong`, and the `.svc-more` arrow slides
@@ -299,25 +298,49 @@ touching `.step`, which owns the absolute positioning of the stub and node.
 
 ### 5.2 Layout
 
-- Spine: 2px column at `left: 50%; margin-left: -1px`, `--line` coloured, with
-  `<i id="spine-fill">` inside carrying
-  `linear-gradient(180deg, var(--acid), var(--violet))` and
-  `transform-origin: top center`.
-- `.steps` is a 2-column grid, `column-gap: var(--sp-7)` (96px), `row-gap: --sp-4`.
-- `.is-left → grid-column: 1`, `.is-right → grid-column: 2`.
-- **Each step is pinned to its own row** by `nth-child(1…10) { grid-row: n }`.
-  This is what makes the two columns interleave instead of stacking.
+The zigzag comes from **half-height grid rows**, not from one row per card.
 
-> **Changing the step count:** extend or trim that `nth-child` list. With more
+```css
+.spine-wrap {
+  --card-w: 380px;  --card-h: 200px;  --gap-y: 28px;
+  --row: calc((var(--card-h) + var(--gap-y)) / 2);   /* half a step */
+  --stub: 48px;     --node: 14px;
+}
+.steps {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) calc(var(--stub) * 2) minmax(0,1fr);
+  grid-auto-rows: var(--row);
+}
+.step { grid-row: span 2; width: min(var(--card-w), 100%); height: var(--card-h); align-self: center; }
+.step.is-left  { grid-column: 1; justify-self: end; }
+.step.is-right { grid-column: 3; justify-self: start; }
+.step:nth-child(n) { grid-row: n / span 2; }   /* written out for 1…10 */
+```
+
+Every step starts one half-row after the previous one and spans two rows, so a
+left card and the right card after it overlap vertically by half a card. That
+is what produces the interleaved zigzag. The middle column is `stub * 2` wide,
+so the spine sits exactly in the centre of it.
+
+> **Changing the step count:** extend or trim the `nth-child` list. With more
 > steps than rules, the extra cards collapse onto one row.
 
-- Stub: 48px (`--sp-7 / 2`) hairline at `top: 40px`, reaching from the card edge
-  to the spine. `transform-origin: right center` on the left side,
-  `left center` on the right, so it grows outward from the spine.
-- Node: 13px dot at `top: 34px`, sitting on the spine, offset with `left`/`right`
-  calc — **never `translateX(-50%)`**, because GSAP animates `scale` on this
-  element and would overwrite a CSS transform.
-- Node halo: `box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent)`.
+- Cards are **fixed size** (`--card-w` × `--card-h`): 380×200, 320×224 at
+  ≤1024px. Content must fit; the bar row is pinned to the bottom with
+  `margin-top: auto`, so every card ends on the same line.
+- Spine: 2px, `left: 50%`, inset `top`/`bottom` by `var(--row)` so it starts and
+  ends at the centre of the first and last card. The fill `<i id="spine-fill">`
+  carries `linear-gradient(180deg, var(--acid), var(--violet))`, a soft
+  two-layer `color-mix` glow, and `transform-origin: top`.
+- Stub and node are centred on the card with `top: 50%`. The stub is
+  `var(--stub)` wide and grows outward from the spine (`transform-origin: 100%`
+  on the left side, `0` on the right).
+- Node: `--node` (14px) dot, 6px dim ring (`--accent-dim`), glow when the step
+  is `.active`. Positioned with `left`/`right` calc — **never
+  `translateX(-50%)`**, because GSAP animates `scale` on this element and would
+  overwrite a CSS transform.
+- `.step` derives `--accent-dim` (16%) and `--accent-soft` (32%) from the
+  inline `--accent` with `color-mix`.
 - Per-step accent comes from JS, interpolating `--acid → --violet` across the
   step list:
 
@@ -330,38 +353,55 @@ const accentAt = (i: number) => {
 ```
 
 - Progress bar fill width is `var(--pct)`, set inline as `(i + 1) / total`.
-- Mobile ≤767px: spine moves to `left: 18px`, `.steps` becomes one column with
-  `padding-left: 54px`, both sides get a 36px stub pointing left.
+- Section background: none (it sits on the page background, so it matches the
+  other sections), plus a 44px grid-line pattern
+  (`--grid-line`) on `.process::before`, faded by a radial mask. `isolation:
+  isolate` + `z-index: -1` keeps the pattern behind the content.
+- Mobile ≤767px: `--spine-x: 9px`, wrap gets `padding-left`, spine moves to the
+  left edge with a fade mask, `.steps` becomes one column (`gap: 16px`), cards
+  grow to their content (`min-height: 176px`), stub points left.
 
-### 5.3 Active state
+### 5.3 Card and active state
 
-The step nearest the viewport centre gets `.active` via a `ScrollTrigger`
-(`top 60%` → `bottom 40%`, `onToggle`), which lights the card in its own accent:
+Glass card: `linear-gradient(170deg, var(--glass-top), var(--glass-bot))`,
+`backdrop-filter: blur(12px)`, 1px `--line` border, `--rad` radius.
 
-```css
-.step.active .step-card {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent),
-              0 18px 40px -28px color-mix(in srgb, var(--accent) 60%, transparent);
-}
-```
+- **Hover:** lifts 4px, border becomes `--accent-soft`, and a cursor spotlight
+  fades in (`.step-card::after`, `radial-gradient(260px circle at var(--mx)
+  var(--my), var(--accent-dim), transparent 65%)`).
+- **Active** (card nearest the viewport centre): same lift and border, plus a
+  7% accent tint in the gradient and a glowing node.
+- The lift is on `.step-card`; the GSAP entrance is on the `.step-motion`
+  wrapper. Two elements, two transforms, no fight.
+
+Typography: step number `1.9rem / 700` in the accent colour, title uppercase
+`1.04rem / 700`, description `.88rem`, percent `.66rem` mono.
 
 ### 5.4 Scroll effects
 
-**Spine fill** — scrubbed (`scrub: 0.5`) over the wrapper, `top 70%` →
-`bottom 60%`, `scaleY: 0 → 1`, `invalidateOnRefresh: true`.
+**Spine fill** — scrubbed (`scrub: 0.8`) over `.steps`, `top 75%` →
+`bottom 84%`, `scaleY: 0 → 1`, `invalidateOnRefresh: true`.
 
-**Per step**, one timeline at `top 84%`:
+**Per step**, one timeline at `top 84%` with
+`toggleActions: "play none none reverse"` (replays backwards on scroll-up).
+Steps run in sequence with overlaps:
 
-| Offset | What |
+| Step | What |
 |---|---|
-| `0` | stub draws, `scaleX: 0 → 1`, `.35s` |
-| `0.1` | node pops, `scale: 0 → 1`, `ease: "back.out(2)"` |
-| `0.15` | card slides in from the spine side, `x: ±40`, `opacity: 0 → 1`, `.6s` |
-| `0.3` | inner elements stagger `0.07s` |
-| `0.5` | progress bar fills, `scaleX: 0 → 1`, `.7s` |
+| 1 | stub draws, `scaleX: 0 → 1`, `.35s` |
+| 2 | node pops, `scale: 0 → 1`, `back.out(2)`, `.4s` |
+| 3 (`-=0.15`) | card slides in from the spine side: `x: ±40`, `scale: .96 → 1`, `opacity: 0 → 1`, `.65s` |
+| 4 (`-=0.3`) | `.step-num, .step-ico, .step-title, .step-desc` stagger `0.05s` |
+| 5 (`+=0.15`) | progress bar fills, `scaleX: 0 → 1`, `.6s` |
 
-Slide direction is read from the class: `fromLeft ? 40 : -40`.
+Slide direction: `is-right` slides from `-40`, `is-left` from `+40`. In the
+stacked mobile layout every card uses `-40`, which is why `setupSpine` takes a
+`stacked` argument and is registered in two `matchMedia` branches (≥768px and
+≤767px).
+
+**Active step:** one `ScrollTrigger` on `.steps` (`top 60%` → `bottom 40%`).
+On every update it picks the step whose centre is nearest the viewport centre
+and moves the `.active` class to it. One class, one owner.
 
 ### 5.5 Stroke drawing without DrawSVGPlugin
 
@@ -545,10 +585,19 @@ const mm = gsap.matchMedia();
 mm.add("(min-width: 621px)", () => { /* parallax on */ });
 mm.add("(max-width: 620px)", () => { /* parallax off */ });
 mm.add("(hover: hover) and (pointer: fine)", () => setupServiceHover(grid));
+mm.add("(min-width: 768px)", () => setupSpine(spine, false));
+mm.add("(max-width: 767px)", () => setupSpine(spine, true));   // stacked layout
 mm.add("(min-width: 768px)", () => setupStack(stack, 0.94));
 mm.add("(max-width: 767px)", () => setupStack(stack, 0.97));
 return () => mm.revert();
 ```
+
+5. **One global listener drives every cursor spotlight.** Any element with a
+   `data-spot` attribute gets `--mx` / `--my` (pointer position in px, relative
+   to the element) from a single passive `pointermove` listener on `document`.
+   The CSS `::after` glow on `.svc` and `.step-card` reads them. It lives in its
+   own `useEffect` so it also runs under reduced motion. Do not add per-card
+   pointer handlers for the glow.
 
 ### 8.1 Two safety patterns worth keeping
 

@@ -27,6 +27,7 @@ const NAV_ITEMS: NavItem[] = [
   { name: "Skills", link: "/#skills", section: "skills" },
   // { name: "Projects", link: "/projects" },
   { name: "Blog", link: "/blog" },
+  { name: "Contact", link: "/contact" },
 ];
 
 /** Tracks which home-page section is currently in view. */
@@ -202,7 +203,7 @@ const NavBar = () => {
             Open to work
           </span>
 
-          <Link
+          {/* <Link
             href="/contact"
             className="relative hidden overflow-hidden rounded-full border border-purple/40 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:border-purple sm:inline-flex"
           >
@@ -211,7 +212,7 @@ const NavBar = () => {
               className="absolute inset-0 bg-gradient-to-r from-purple/25 via-transparent to-cyan-400/25 opacity-0 transition-opacity duration-300 hover:opacity-100"
               aria-hidden="true"
             />
-          </Link>
+          </Link> */}
 
           {/* Mobile toggle */}
           <button

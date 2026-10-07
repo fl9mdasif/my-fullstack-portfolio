@@ -1,20 +1,15 @@
-"use client";
-import { ProjectParallax } from "@/components/ui/ProjectParallax";
-import { useGetAllProjectsQuery } from "@/redux/api/projectApi";
-import React from "react";
+import { pageMetadata } from "@/lib/seo";
+import Projects from "./projects-view";
 
-const Projects = () => {
-  const { data: projectsData, refetch, isLoading } = useGetAllProjectsQuery({});
+// The page body is a client component (./projects-view.tsx). This thin server
+// file exists so the route can export its own metadata and canonical.
+export const metadata = pageMetadata({
+  title: "Projects",
+  description:
+    "Selected full stack projects by Asif Al Azad: MERN, Next.js, TypeScript and AI-powered web apps, with live demos, source code and the tech behind each one.",
+  path: "/projects",
+});
 
-  const projectsList = projectsData || [];
-  // console.log("projects data", projectsData);
-  // console.log("fetch project", projectsList);
-
-  return (
-    <div className="bg-[#06091f] min-h-screen">
-      <ProjectParallax isLoading={isLoading} projectsList={projectsList} />
-    </div>
-  );
-};
-
-export default Projects;
+export default function Page() {
+  return <Projects />;
+}

@@ -13,6 +13,8 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
     "./data/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
+    "./hooks/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -40,6 +42,17 @@ const config: Config = {
           "100": "#E4ECFF",
         },
         purple: "#CBACF9",
+        // Hero tokens. addVariablesForColors below also exposes these as
+        // --hero-ink, --hero-muted, ... CSS variables.
+        hero: {
+          ink: "#fafafa",
+          muted: "#bec1dd",
+          dim: "#8b90b5",
+          violet: "#a78bfa",
+          blue: "#6b8cff",
+          cyan: "#22d3ee",
+          green: "#34d399",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -73,6 +86,9 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      fontFamily: {
+        serif: ["var(--font-serif)", "Georgia", "serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
